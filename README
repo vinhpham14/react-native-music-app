@@ -1,0 +1,4 @@
+npm install react-native-video
+npm install @react-native-community/slider
+npm install link
+react-native run-android
