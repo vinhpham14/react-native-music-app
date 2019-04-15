@@ -20,12 +20,12 @@ export default class Header extends Component {
     }
   }
 
-  onQueuePress = () => {
+  onPlaylistPress = () => {
     // Inside proceeding
 
     // Invoke the callback
-    if (typeof this.props.onQueuePress === "function") {
-      this.props.onQueuePress();
+    if (typeof this.props.onPlaylistPress === "function") {
+      this.props.onPlaylistPress();
     }
   }
 
@@ -51,7 +51,7 @@ export default class Header extends Component {
           style={styles.message}>{this.props.message.toUpperCase()}
         </Text>
 
-        <TouchableOpacity onPress={this.onQueuePress}>
+        <TouchableOpacity onPress={this.onPlaylistPress}>
           <Image style={styles.button}
             source={require('../../resources/ic_queue_music_white.png')} />
         </TouchableOpacity>
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingLeft: 12,
     paddingRight: 12,
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   message: {
     flex: 1,

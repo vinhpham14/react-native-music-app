@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StatusBar, Text, Alert } from 'react-native'
+import { View, StatusBar, Text, Alert, ScrollView, Dimensions } from 'react-native'
 import Video from 'react-native-video'
 
 import Header from '../header/Header';
@@ -7,6 +7,8 @@ import AlbumArt from '../album/AlbumArt';
 import TrackDetails from '../track-details/TrackDetails';
 import SeekBar from '../seek-bar/SeekBar';
 import Controls from '../controls/Controls';
+import Playlist from '../playlist/Playlist'
+import LinearGradient from 'react-native-linear-gradient'
 
 export default class Player extends Component {
   constructor(prop) {
@@ -20,6 +22,7 @@ export default class Player extends Component {
       repeatOn: false,
       shuffleOn: false,
       isChanging: false,
+      showPlaylist: false,
     };
   }
 
@@ -79,13 +82,13 @@ export default class Player extends Component {
   }
 
   onForward = () => {
-    if (this.state.selectedTrack < this.props.tracks.length - 1) {
+    if (this.state.selectedTrack < this.props.playlist.tracks.length - 1) {
       this.videoPlayer !== undefined && this.videoPlayer.seek(0);
       this.setState({ isChanging: true });
 
       // Get the next track
       const nextTrack = (this.state.shuffleOn) ?
-        Math.floor(Math.random() * (this.props.tracks.length)) : this.state.selectedTrack + 1;
+        Math.floor(Math.random() * (this.props.playlist.tracks.length)) : this.state.selectedTrack + 1;
 
       console.log('shuffle' + this.state.shuffleOn)
       console.log('rd' + nextTrack)
@@ -113,7 +116,8 @@ export default class Player extends Component {
   }
 
   render() {
-    const track = this.props.tracks[this.state.selectedTrack];
+    const playlist = this.props.playlist;
+    const track = playlist.tracks[this.state.selectedTrack];
     const video = this.state.isChanging ? null : (
       <Video
         source={{ uri: track.audioUrl }}
@@ -136,46 +140,58 @@ export default class Player extends Component {
       />
     );
 
+    const playerView = (
+      //<View style={styles.container}>
+      <View>
+        <LinearGradient colors={['#2b3535', '#121212', '#121212']} style={styles.header} />
+        <View style={{ position: 'absolute' }}>
+          <StatusBar hidden={true} />
+          <Header
+            message="PLAYING FROM CHARTS"
+            onPlaylistPress={() => this.setState({ showPlaylist: true })}
+          />
+          <AlbumArt url={track.albumArtUrl} />
+          <TrackDetails title={track.title} artist={track.artist} />
+          <SeekBar
+            onSliding={this.onSliding}
+            duration={this.state.duration}
+            currentPosition={this.state.currentPosition}
+            onSlidingComplete={() => this.setState({ paused: false })}
+          />
+          <Controls
+            onPressRepeat={() => this.setState({ repeatOn: !this.state.repeatOn })}
+            repeatOn={this.state.repeatOn}
+            shuffleOn={this.state.shuffleOn}
+            forwardDisabled={this.state.selectedTrack === playlist.tracks.length - 1}
+            onPressShuffle={() => this.setState({ shuffleOn: !this.state.shuffleOn })}
+            onPressPlay={() => this.setState({ paused: false })}
+            onPressPause={() => this.setState({ paused: true })}
+            onBack={this.onBack}
+            onForward={this.onForward}
+            paused={this.state.paused}
+          />
+        </View>
+      </View>
+
+      // {/* </View> */ }
+    )
+
+    const playlistView = 
+      <Playlist 
+        onBackPressed={() => { this.setState({ showPlaylist: false }) }} 
+        playlist={playlist}
+      />
+
     return (
       <View style={styles.container}>
-        <StatusBar hidden={true} />
-        <Header message="PLAYING FROM CHARTS" />
-        <AlbumArt url={track.albumArtUrl} />
-        <TrackDetails title={track.title} artist={track.artist} />
-        <SeekBar
-          onSliding={this.onSliding}
-          duration={this.state.duration}
-          currentPosition={this.state.currentPosition}
-          onSlidingComplete={() => this.setState({ paused: false })}
-        />
-        <Controls
-          onPressRepeat={() => this.setState({ repeatOn: !this.state.repeatOn })}
-          repeatOn={this.state.repeatOn}
-          shuffleOn={this.state.shuffleOn}
-          forwardDisabled={this.state.selectedTrack === this.props.tracks.length - 1}
-          onPressShuffle={() => this.setState({ shuffleOn: !this.state.shuffleOn })}
-          onPressPlay={() => this.setState({ paused: false })}
-          onPressPause={() => this.setState({ paused: true })}
-          onBack={this.onBack}
-          onForward={this.onForward}
-          paused={this.state.paused}
-        />
-
-        {/* <Text style={{ color: "white" }}>{this.state.paused.toString()}</Text>
-        <Text style={{ color: "white" }}>{this.state.currentPosition}</Text> */}
-        <Text style={{ color: "white" }}>{this.state.shuffleOn.toString()}</Text>
-        <Text style={{ color: "white" }}>{this.state.selectedTrack}</Text>
-        <Text style={{ color: "white" }}>{Math.floor(Math.random() * (this.props.tracks.length))}</Text>
-        <Text style={{ color: "white" }}>{this.props.tracks.length}</Text>
-
-
+        {this.state.showPlaylist ? playlistView : playerView}
         {video}
-
       </View>
     )
   }
 }
 
+const { height, width } = Dimensions.get('window');
 const styles = {
   container: {
     flex: 1,
@@ -184,5 +200,9 @@ const styles = {
   audioElement: {
     height: 0,
     width: 0,
-  }
+  },
+  header: {
+    width: '100%',
+    height: '100%'
+  },
 };
