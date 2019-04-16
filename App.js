@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import Player from './src/components/player/Player';
+import PlayerPage from './src/views/PlayerPage';
 import Playlist from './src/components/playlist/Playlist';
 import { Text, View } from 'react-native'
 
@@ -113,7 +113,7 @@ export const PLAYLIST = {
 export default class App extends Component {
   render() {
     return (
-      <Player playlist={PLAYLIST}/>
+      <PlayerPage playlist={PLAYLIST}/>
       //<Playlist />
     )
   }

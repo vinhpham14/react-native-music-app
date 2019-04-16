@@ -52,7 +52,7 @@ export default class TrackDetails extends Component {
 
         <TouchableOpacity onPress={this.props.onAddPress}>
           <Image style={styles.button}
-            source={require('../../resources/ic_add_circle_outline_white.png')} />
+            source={require('../../images/ic_add_circle_outline_white.png')} />
         </TouchableOpacity>
 
         <View style={styles.detailsWrapper}>
@@ -63,7 +63,7 @@ export default class TrackDetails extends Component {
         <TouchableOpacity onPress={this.props.onMorePress}>
           <View style={styles.moreButton}>
             <Image style={styles.moreButtonIcon}
-              source={require('../../resources/ic_more_horiz_white.png')} />
+              source={require('../../images/ic_more_horiz_white.png')} />
           </View>
         </TouchableOpacity>
 

@@ -2,15 +2,15 @@ import React, { Component } from 'react'
 import { View, StatusBar, Text, Alert, ScrollView, Dimensions } from 'react-native'
 import Video from 'react-native-video'
 
-import Header from '../header/Header';
-import AlbumArt from '../album/AlbumArt';
-import TrackDetails from '../track-details/TrackDetails';
-import SeekBar from '../seek-bar/SeekBar';
-import Controls from '../controls/Controls';
-import Playlist from '../playlist/Playlist'
+import Header from '../components/header/Header';
+import AlbumArt from '../components/album/AlbumArt';
+import TrackDetails from '../components/track-details/TrackDetails';
+import SeekBar from '../components/seek-bar/SeekBar';
+import Controls from '../components/controls/Controls';
+import Playlist from '../components/playlist/Playlist'
 import LinearGradient from 'react-native-linear-gradient'
 
-export default class Player extends Component {
+export default class PlayerPage extends Component {
   constructor(prop) {
     super(prop);
 

@@ -44,7 +44,7 @@ export default class Header extends Component {
 
         <TouchableOpacity onPress={this.onDownPress}>
           <Image style={styles.button}
-            source={require('../../resources/ic_keyboard_arrow_down_white.png')} />
+            source={require('../../images/ic_keyboard_arrow_down_white.png')} />
         </TouchableOpacity>
 
         <Text onPress={this.onMessagePress}
@@ -53,7 +53,7 @@ export default class Header extends Component {
 
         <TouchableOpacity onPress={this.onPlaylistPress}>
           <Image style={styles.button}
-            source={require('../../resources/ic_queue_music_white.png')} />
+            source={require('../../images/ic_queue_music_white.png')} />
         </TouchableOpacity>
 
       </View>
