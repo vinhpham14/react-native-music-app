@@ -1,63 +1,55 @@
 import React, { Component } from 'react';
 
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 export default class Header extends Component {
-
   onDownPress = () => {
     // Inside proceeding
     this.setMessage();
 
     // Invoke the callback
-    if (typeof this.props.onDownPress === "function") {
+    if (typeof this.props.onDownPress === 'function') {
       this.props.onDownPress();
     }
-  }
+  };
 
   onPlaylistPress = () => {
     // Inside proceeding
 
     // Invoke the callback
-    if (typeof this.props.onPlaylistPress === "function") {
+    if (typeof this.props.onPlaylistPress === 'function') {
       this.props.onPlaylistPress();
     }
-  }
+  };
 
   onMessagePress = () => {
     // Inside proceeding
 
     // Invoke the callback
-    if (typeof this.props.onMessagePress === "function") {
+    if (typeof this.props.onMessagePress === 'function') {
       this.props.onMessagePress();
     }
-  }
+  };
 
   render() {
     return (
       <View style={styles.container}>
-
         <TouchableOpacity onPress={this.onDownPress}>
-          <Image style={styles.button}
-            source={require('../../images/ic_keyboard_arrow_down_white.png')} />
+          <Image
+            style={styles.button}
+            source={require('../../images/ic_keyboard_arrow_down_white.png')}
+          />
         </TouchableOpacity>
 
-        <Text onPress={this.onMessagePress}
-          style={styles.message}>{this.props.message.toUpperCase()}
+        <Text onPress={this.onMessagePress} style={styles.message}>
+          {this.props.message.toUpperCase()}
         </Text>
 
         <TouchableOpacity onPress={this.onPlaylistPress}>
-          <Image style={styles.button}
-            source={require('../../images/ic_queue_music_white.png')} />
+          <Image style={styles.button} source={require('../../images/ic_queue_music_white.png')} />
         </TouchableOpacity>
-
       </View>
-    )
+    );
   }
 }
 
@@ -67,7 +59,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingLeft: 12,
     paddingRight: 12,
-    flexDirection: 'row'
+    // flexDirection: 'row',
   },
   message: {
     flex: 1,
@@ -77,6 +69,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   button: {
-    opacity: 0.80
-  }
+    opacity: 0.8,
+  },
 });

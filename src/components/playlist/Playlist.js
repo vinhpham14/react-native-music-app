@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+/* eslint-disable react/destructuring-assignment */
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -8,41 +9,38 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  BackHandler
-} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
-
-
+  BackHandler,
+} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default class Playlist extends Component {
-
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', () => {
       this.props.onBackPressed();
       return true;
-    })
+    });
   }
 
   render() {
-    const playlist = this.props.playlist;
+    const { playlist } = this.props;
     let index = 0;
 
     return (
       <View>
         <ScrollView contentContainerStyle={styles.container}>
-
-          {/* //<LinearGradient colors={['#302e2e', '#121212']} style={styles.header} /> */}
           <LinearGradient colors={['#2b3535', '#121212']} style={styles.header} />
 
           <View style={styles.playlistDetails}>
             <Image style={styles.playlistArt} source={{ uri: playlist.playlistArtUrl }} />
             <Text style={styles.playlistTitle}>{playlist.name}</Text>
             <Text style={styles.playlistSubtitle}>{`${playlist.tracks.length} SONGS`}</Text>
-            <TouchableOpacity style={styles.playlistButton}><Text style={styles.playlistButtonText}>SHUFFLE PLAY</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.playlistButton}>
+              <Text style={styles.playlistButtonText}>SHUFFLE PLAY</Text>
+            </TouchableOpacity>
           </View>
 
-          
-          <FlatList style={styles.list}
+          <FlatList
+            style={styles.list}
             data={playlist.tracks}
             renderItem={({ item }) => (
               <View style={styles.playlistItem}>
@@ -51,9 +49,8 @@ export default class Playlist extends Component {
                 {/* <Text style={styles.playlistItemMeta}>{`${item.artist} • ${item.album}`}</Text> */}
               </View>
             )}
-            keyExtractor={({item})=>index++}
+            keyExtractor={({ item }) => index++}
           />
-
         </ScrollView>
       </View>
     );
@@ -61,7 +58,6 @@ export default class Playlist extends Component {
 }
 
 const { height, width } = Dimensions.get('window');
-const headerHeight = 60 * height / 100;
 
 const styles = StyleSheet.create({
   container: {
@@ -70,12 +66,11 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    height: 5 * height / 100 + 400 // 400: height of playlistDetails
+    height: (5 * height) / 100 + 400, // 400: height of playlistDetails
   },
   list: {
     width: '100%',
-    //height: 400,
-    backgroundColor: '#121212'
+    backgroundColor: '#121212',
   },
   playlistDetails: {
     width: '100%',
@@ -94,13 +89,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 25,
     fontWeight: 'bold',
-    marginTop: 25
+    marginTop: 25,
   },
   playlistSubtitle: {
-    //fontFamily: 'gibson-regular',
+    // fontFamily: 'gibson-regular',
     color: '#b9bdbe',
     fontSize: 12,
-    marginTop: 15
+    marginTop: 15,
   },
   playlistButton: {
     backgroundColor: '#2ab759',
@@ -110,26 +105,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 100,
-    marginTop: 30
+    marginTop: 30,
   },
   playlistButtonText: {
-    //fontFamily: 'gibson-bold',
+    // fontFamily: 'gibson-bold',
     fontSize: 12,
     color: '#fff',
-    letterSpacing: 2
+    letterSpacing: 2,
   },
   playlistItem: {
     marginLeft: 25,
-    marginBottom: 25
+    marginBottom: 25,
   },
   playlistItemTitle: {
-    //fontFamily: 'gibson-bold',
+    // fontFamily: 'gibson-bold',
     fontSize: 18,
-    color: '#fff'
+    color: '#fff',
   },
   playlistItemMeta: {
-    //fontFamily: 'gibson-regular',
+    // fontFamily: 'gibson-regular',
     color: '#b9bdbe',
-    fontSize: 15
-  }
+    fontSize: 15,
+  },
 });

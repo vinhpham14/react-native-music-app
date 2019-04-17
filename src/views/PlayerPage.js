@@ -1,14 +1,14 @@
-import React, { Component } from 'react'
-import { View, StatusBar, Text, Alert, ScrollView, Dimensions } from 'react-native'
-import Video from 'react-native-video'
+import React, { Component } from 'react';
+import { View, StatusBar, Text, Alert, Dimensions } from 'react-native';
+import Video from 'react-native-video';
 
+import LinearGradient from 'react-native-linear-gradient';
 import Header from '../components/header/Header';
 import AlbumArt from '../components/album/AlbumArt';
 import TrackDetails from '../components/track-details/TrackDetails';
 import SeekBar from '../components/seek-bar/SeekBar';
 import Controls from '../components/controls/Controls';
-import Playlist from '../components/playlist/Playlist'
-import LinearGradient from 'react-native-linear-gradient'
+import Playlist from '../components/playlist/Playlist';
 
 export default class PlayerPage extends Component {
   constructor(prop) {
@@ -26,26 +26,26 @@ export default class PlayerPage extends Component {
     };
   }
 
-  setDuration = (data) => {
+  setDuration = data => {
     this.setState({
-      duration: Math.floor(data.duration)
+      duration: Math.floor(data.duration),
     });
-  }
+  };
 
-  setCurrentPosition = (data) => {
+  setCurrentPosition = data => {
     this.setState({
-      currentPosition: Math.floor(data.currentTime)
+      currentPosition: Math.floor(data.currentTime),
     });
-  }
+  };
 
-  onSliding = (time) => {
-    time = Math.round(time);
-    this.videoPlayer.seek(time);
+  onSliding = time => {
+    const ttime = Math.round(time);
+    this.videoPlayer.seek(ttime);
     this.setState({
-      currentPosition: time,
-      paused: true
-    })
-  }
+      currentPosition: ttime,
+      paused: true,
+    });
+  };
 
   videoError = () => {
     Alert.alert(
@@ -58,54 +58,63 @@ export default class PlayerPage extends Component {
         },
         { text: 'OK' },
       ],
-      { cancelable: false },
+      { cancelable: false }
     );
-  }
+  };
 
   onBack = () => {
     if (this.state.currentPosition < 10 && this.state.selectedTrack > 0) {
       this.videoPlayer !== undefined && this.videoPlayer.seek(0);
       this.setState({ isChanging: true });
-      setTimeout(() => this.setState({
-        currentPosition: 0,
-        paused: false,
-        duration: 1,
-        isChanging: false,
-        selectedTrack: this.state.selectedTrack - 1,
-      }), 0);
+      setTimeout(
+        prevState =>
+          this.setState({
+            currentPosition: 0,
+            paused: false,
+            duration: 1,
+            isChanging: false,
+            selectedTrack: this.prevState.selectedTrack - 1,
+          }),
+        0
+      );
     } else {
       this.videoPlayer.seek(0);
       this.setState({
         currentPosition: 0,
       });
     }
-  }
+  };
 
   onForward = () => {
     if (this.state.selectedTrack < this.props.playlist.tracks.length - 1) {
       this.videoPlayer !== undefined && this.videoPlayer.seek(0);
       this.setState({ isChanging: true });
 
-      // Get the next track
-      const nextTrack = (this.state.shuffleOn) ?
-        Math.floor(Math.random() * (this.props.playlist.tracks.length)) : this.state.selectedTrack + 1;
+      // Get the next tracks
+      const nextTrack = this.state.shuffleOn
+        ? Math.floor(Math.random() * this.props.playlist.tracks.length)
+        : this.state.selectedTrack + 1;
 
-      console.log('shuffle' + this.state.shuffleOn)
-      console.log('rd' + nextTrack)
+      console.log(`shuffle${this.state.shuffleOn}`);
+      console.log(`rd${nextTrack}`);
 
-      setTimeout(() => this.setState({
-        currentPosition: 0,
-        duration: 1,
-        paused: false,
-        isChanging: false,
-        selectedTrack: nextTrack
-      }), 0);
+      setTimeout(
+        () =>
+          this.setState({
+            currentPosition: 0,
+            duration: 1,
+            paused: false,
+            isChanging: false,
+            selectedTrack: nextTrack,
+          }),
+        0
+      );
 
       setTimeout(() => {
-        this.setState
+        this.setState;
       });
     }
-  }
+  };
 
   onEnd = () => {
     if (this.state.repeatOn === true) {
@@ -113,39 +122,39 @@ export default class PlayerPage extends Component {
     } else {
       this.onForward();
     }
-  }
+  };
 
   render() {
-    const playlist = this.props.playlist;
+    const { playlist } = this.props;
     const track = playlist.tracks[this.state.selectedTrack];
+
     const video = this.state.isChanging ? null : (
       <Video
         source={{ uri: track.audioUrl }}
-        ref={(ref) => {
-          this.videoPlayer = ref
+        ref={ref => {
+          this.videoPlayer = ref;
         }}
-        paused={this.state.paused}              // Pauses playback entirely.
-        resizeMode="cover"                      // Fill the whole screen at aspect ratio.
-        //repeat={this.state.repeatOn}            // Repeat forever. ==> Not working, proceed by onEnd instead
-        onLoadStart={this.loadStart}            // Callback when video starts to load
-        onLoad={this.setDuration}               // Callback when video loads
-        onProgress={this.setCurrentPosition}    // Callback every ~250ms with currentTime
-        onEnd={this.onEnd}                  // Callback when playback finishes
-        onError={this.videoError}               // Callback when video cannot be loaded
+        paused={this.state.paused} // Pauses playback entirely.
+        resizeMode="cover" // Fill the whole screen at aspect ratio.
+        // repeat={this.state.repeatOn}            // Repeat forever. ==> Not working, proceed by onEnd instead
+        onLoadStart={this.loadStart} // Callback when video starts to load
+        onLoad={this.setDuration} // Callback when video loads
+        onProgress={this.setCurrentPosition} // Callback every ~250ms with currentTime
+        onEnd={this.onEnd} // Callback when playback finishes
+        onError={this.videoError} // Callback when video cannot be loaded
         style={styles.audioElement}
         rate={1.0}
         volume={1.0}
         muted={false}
-        audioOnly={true}
+        audioOnly
       />
     );
 
     const playerView = (
-      //<View style={styles.container}>
       <View>
         <LinearGradient colors={['#2b3535', '#121212', '#121212']} style={styles.header} />
         <View style={{ position: 'absolute' }}>
-          <StatusBar hidden={true} />
+          <StatusBar hidden />
           <Header
             message="PLAYING FROM CHARTS"
             onPlaylistPress={() => this.setState({ showPlaylist: true })}
@@ -172,22 +181,23 @@ export default class PlayerPage extends Component {
           />
         </View>
       </View>
+    );
 
-      // {/* </View> */ }
-    )
-
-    const playlistView = 
-      <Playlist 
-        onBackPressed={() => { this.setState({ showPlaylist: false }) }} 
+    const playlistView = (
+      <Playlist
+        onBackPressed={() => {
+          this.setState({ showPlaylist: false });
+        }}
         playlist={playlist}
       />
+    );
 
     return (
       <View style={styles.container}>
         {this.state.showPlaylist ? playlistView : playerView}
         {video}
       </View>
-    )
+    );
   }
 }
 
@@ -203,6 +213,6 @@ const styles = {
   },
   header: {
     width: '100%',
-    height: '100%'
+    height: '100%',
   },
 };
