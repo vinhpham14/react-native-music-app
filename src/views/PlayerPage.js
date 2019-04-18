@@ -31,8 +31,6 @@ class PlayerPage extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.playlist !== prevState.playlist) {
-      console.log(nextProps.playlist);
-      console.log(prevState.playlist);
       return {
         ...nextProps,
         selectedTrack: 0,

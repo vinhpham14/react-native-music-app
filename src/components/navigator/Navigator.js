@@ -10,9 +10,6 @@ const Navigator = ({ onHomePressed, onSearchPressed, onPlayerPressed, selector }
   if (selector === 'search') opacitySearch = 1;
   if (selector === 'player') opacityPlayer = 1;
 
-  console.log(selector);
-  console.log(opacityHome);
-
   return (
     <View style={styles.container}>
       <TouchableOpacity

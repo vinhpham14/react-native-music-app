@@ -54,9 +54,6 @@ export const reducer = (state = initialState, action) => {
       };
     }
     case types.SET_CURRENT_SONG_TIME: {
-      console.log(payload);
-      console.log(state.currentTime);
-
       return {
         ...state,
         currentTime: payload,
