@@ -1,4 +1,8 @@
 npm install react-native-video
 npm install @react-native-community/slider
+npm install redux react-redux
+npm install --save react-navigation
+npm install --save react-native-gesture-handler
 npm install link
+
 react-native run-android
