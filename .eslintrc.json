@@ -13,6 +13,7 @@
     "react/prop-types": "off",
     "no-underscore-dangle": "off",
     "react/no-this-in-sfc": "off",
+    "no-console": "off",
     "react/jsx-filename-extension": [
       1,
       {

@@ -1,7 +1,15 @@
 import React from 'react';
-import { View, Image, StyleSheet, Text, FlatList, Dimensions } from 'react-native';
+import {
+  View,
+  Image,
+  StyleSheet,
+  Text,
+  FlatList,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 
-const SubjectList = ({ subjectInfo, subject, playlists, description }) => {
+const SubjectList = ({ subjectInfo, subject, playlists, description, onPressedItem }) => {
   let _subject = subject;
   let _playlists = playlists;
   let _description = description;
@@ -14,8 +22,6 @@ const SubjectList = ({ subjectInfo, subject, playlists, description }) => {
 
   if (_description === undefined) _description = subjectInfo.description;
 
-  console.log(_description);
-
   return (
     <View>
       <Header subject={_subject} />
@@ -27,23 +33,22 @@ const SubjectList = ({ subjectInfo, subject, playlists, description }) => {
         keyExtractor={(item, index) => index.toString()}
         data={_playlists}
         renderItem={({ item }) => {
-          return <Item playlist={item} />;
+          return <Item playlist={item} onPressedItem={onPressedItem} />;
         }}
-        // renderItem={({ item }) => <Item playlist={item} />}
       />
     </View>
   );
 };
 
-const Item = ({ playlist }) => {
+const Item = ({ playlist, onPressedItem }) => {
   const { itemImage, itemContainer, imageText } = styles;
   return (
-    <View style={itemContainer}>
+    <TouchableOpacity style={itemContainer} onPress={() => onPressedItem(playlist)}>
       <Image style={itemImage} source={{ uri: playlist.playlistArtUrl }} />
       <Text style={imageText} numberOfLines={2}>
         {playlist.name}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -58,8 +63,6 @@ const Header = ({ subject }) => {
 
 const Description = ({ description }) => {
   const { descriptionStyle } = styles;
-  console.log('XXXXXXXXXXXXXXXX');
-  console.log(description);
   if (description !== undefined && description.length > 0) {
     return (
       <View>

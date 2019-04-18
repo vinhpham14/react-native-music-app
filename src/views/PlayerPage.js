@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, StatusBar, Text, Alert, Dimensions } from 'react-native';
+import { View, StatusBar, Alert, Dimensions } from 'react-native';
 import Video from 'react-native-video';
+import { connect } from 'react-redux';
 
 import LinearGradient from 'react-native-linear-gradient';
 import Header from '../components/header/Header';
@@ -10,9 +11,10 @@ import SeekBar from '../components/seek-bar/SeekBar';
 import Controls from '../components/controls/Controls';
 import Playlist from '../components/playlist/Playlist';
 
-export default class PlayerPage extends Component {
-  constructor(prop) {
-    super(prop);
+class PlayerPage extends Component {
+  constructor(props) {
+    super(props);
+    const { playlist } = this.props;
 
     this.state = {
       paused: false,
@@ -23,7 +25,21 @@ export default class PlayerPage extends Component {
       shuffleOn: false,
       isChanging: false,
       showPlaylist: false,
+      playlist,
     };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.playlist !== prevState.playlist) {
+      console.log(nextProps.playlist);
+      console.log(prevState.playlist);
+      return {
+        ...nextProps,
+        selectedTrack: 0,
+      };
+    }
+
+    return null;
   }
 
   setDuration = data => {
@@ -63,17 +79,19 @@ export default class PlayerPage extends Component {
   };
 
   onBack = () => {
-    if (this.state.currentPosition < 10 && this.state.selectedTrack > 0) {
+    const { currentPosition, selectedTrack } = this.state;
+
+    if (currentPosition < 10 && selectedTrack > 0) {
       this.videoPlayer !== undefined && this.videoPlayer.seek(0);
       this.setState({ isChanging: true });
       setTimeout(
-        prevState =>
+        () =>
           this.setState({
             currentPosition: 0,
             paused: false,
             duration: 1,
             isChanging: false,
-            selectedTrack: this.prevState.selectedTrack - 1,
+            selectedTrack: selectedTrack - 1,
           }),
         0
       );
@@ -86,17 +104,16 @@ export default class PlayerPage extends Component {
   };
 
   onForward = () => {
-    if (this.state.selectedTrack < this.props.playlist.tracks.length - 1) {
+    const { selectedTrack, shuffleOn } = this.state;
+    const { playlist } = this.props;
+    if (selectedTrack < playlist.tracks.length - 1) {
       this.videoPlayer !== undefined && this.videoPlayer.seek(0);
       this.setState({ isChanging: true });
 
       // Get the next tracks
-      const nextTrack = this.state.shuffleOn
-        ? Math.floor(Math.random() * this.props.playlist.tracks.length)
-        : this.state.selectedTrack + 1;
-
-      console.log(`shuffle${this.state.shuffleOn}`);
-      console.log(`rd${nextTrack}`);
+      const nextTrack = shuffleOn
+        ? Math.floor(Math.random() * playlist.tracks.length)
+        : selectedTrack + 1;
 
       setTimeout(
         () =>
@@ -109,15 +126,12 @@ export default class PlayerPage extends Component {
           }),
         0
       );
-
-      setTimeout(() => {
-        this.setState;
-      });
     }
   };
 
   onEnd = () => {
-    if (this.state.repeatOn === true) {
+    const { repeatOn } = this.state;
+    if (repeatOn === true) {
       this.videoPlayer !== undefined && this.videoPlayer.seek(0);
     } else {
       this.onForward();
@@ -126,15 +140,26 @@ export default class PlayerPage extends Component {
 
   render() {
     const { playlist } = this.props;
-    const track = playlist.tracks[this.state.selectedTrack];
 
-    const video = this.state.isChanging ? null : (
+    const {
+      selectedTrack,
+      isChanging,
+      paused,
+      duration,
+      currentPosition,
+      repeatOn,
+      shuffleOn,
+    } = this.state;
+
+    const track = playlist.tracks[selectedTrack];
+
+    const video = isChanging ? null : (
       <Video
         source={{ uri: track.audioUrl }}
         ref={ref => {
           this.videoPlayer = ref;
         }}
-        paused={this.state.paused} // Pauses playback entirely.
+        paused={paused} // Pauses playback entirely.
         resizeMode="cover" // Fill the whole screen at aspect ratio.
         // repeat={this.state.repeatOn}            // Repeat forever. ==> Not working, proceed by onEnd instead
         onLoadStart={this.loadStart} // Callback when video starts to load
@@ -147,6 +172,7 @@ export default class PlayerPage extends Component {
         volume={1.0}
         muted={false}
         audioOnly
+        playInBackground
       />
     );
 
@@ -163,21 +189,21 @@ export default class PlayerPage extends Component {
           <TrackDetails title={track.title} artist={track.artist} />
           <SeekBar
             onSliding={this.onSliding}
-            duration={this.state.duration}
-            currentPosition={this.state.currentPosition}
+            duration={duration}
+            currentPosition={currentPosition}
             onSlidingComplete={() => this.setState({ paused: false })}
           />
           <Controls
-            onPressRepeat={() => this.setState({ repeatOn: !this.state.repeatOn })}
-            repeatOn={this.state.repeatOn}
-            shuffleOn={this.state.shuffleOn}
-            forwardDisabled={this.state.selectedTrack === playlist.tracks.length - 1}
-            onPressShuffle={() => this.setState({ shuffleOn: !this.state.shuffleOn })}
+            onPressRepeat={() => this.setState({ repeatOn: !repeatOn })}
+            repeatOn={repeatOn}
+            shuffleOn={shuffleOn}
+            forwardDisabled={selectedTrack === playlist.tracks.length - 1}
+            onPressShuffle={() => this.setState({ shuffleOn: !shuffleOn })}
             onPressPlay={() => this.setState({ paused: false })}
             onPressPause={() => this.setState({ paused: true })}
             onBack={this.onBack}
             onForward={this.onForward}
-            paused={this.state.paused}
+            paused={paused}
           />
         </View>
       </View>
@@ -192,9 +218,11 @@ export default class PlayerPage extends Component {
       />
     );
 
+    const { showPlaylist } = this.state;
+
     return (
       <View style={styles.container}>
-        {this.state.showPlaylist ? playlistView : playerView}
+        {showPlaylist ? playlistView : playerView}
         {video}
       </View>
     );
@@ -202,6 +230,7 @@ export default class PlayerPage extends Component {
 }
 
 const { height, width } = Dimensions.get('window');
+
 const styles = {
   container: {
     flex: 1,
@@ -216,3 +245,7 @@ const styles = {
     height: '100%',
   },
 };
+
+export default connect(state => {
+  return { playlist: state.playlist };
+})(PlayerPage);

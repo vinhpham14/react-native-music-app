@@ -23,7 +23,6 @@ export default class Playlist extends Component {
 
   render() {
     const { playlist } = this.props;
-    let index = 0;
 
     return (
       <View>
@@ -49,7 +48,7 @@ export default class Playlist extends Component {
                 {/* <Text style={styles.playlistItemMeta}>{`${item.artist} • ${item.album}`}</Text> */}
               </View>
             )}
-            keyExtractor={({ item }) => index++}
+            keyExtractor={(item, index) => index.toString()}
           />
         </ScrollView>
       </View>

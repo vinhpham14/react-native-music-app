@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingLeft: 12,
     paddingRight: 12,
-    // flexDirection: 'row',
+    flexDirection: 'row',
   },
   message: {
     flex: 1,
