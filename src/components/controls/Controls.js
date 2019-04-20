@@ -24,7 +24,11 @@ export default class Controls extends Component {
       <View style={styles.container}>
         <TouchableOpacity activeOpacity={0.0} onPress={this.props.onPressShuffle}>
           <Image
-            style={[styles.secondaryControl, this.props.shuffleOn ? [] : styles.off]}
+            style={[
+              styles.secondaryControl,
+              this.props.shuffleOn ? [] : styles.off,
+              { marginLeft: 30 },
+            ]}
             source={require('../../images/ic_shuffle_white.png')}
           />
         </TouchableOpacity>
@@ -56,7 +60,11 @@ export default class Controls extends Component {
         <View style={{ width: 40 }} />
         <TouchableOpacity activeOpacity={0.0} onPress={this.props.onPressRepeat}>
           <Image
-            style={[styles.secondaryControl, this.props.repeatOn ? [] : styles.off]}
+            style={[
+              styles.secondaryControl,
+              this.props.repeatOn ? [] : styles.off,
+              { marginRight: 30 },
+            ]}
             source={require('../../images/ic_repeat_white.png')}
           />
         </TouchableOpacity>
@@ -82,8 +90,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   secondaryControl: {
-    height: 18,
-    width: 18,
+    height: 28,
+    width: 28,
   },
   off: {
     opacity: 0.3,

@@ -67,7 +67,7 @@ class HomePage extends Component {
               <Item subjectInfo={item} onPressedItem={this.onPressedPlaylist} />
             )}
             keyExtractor={(item, index) => index.toString()}
-            ListFooterComponent={() => <View style={{ height: 150 }} />}
+            ListFooterComponent={() => <View style={{ height: 100 }} />}
           />
         </View>
         <View style={{ flex: 0.095, backgroundColor: '#121212' }}>

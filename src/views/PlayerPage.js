@@ -158,6 +158,8 @@ class PlayerPage extends Component {
     const { selectedTrack, isChanging, repeatOn, shuffleOn } = this.state;
 
     const track = playlist.tracks[selectedTrack];
+    console.log('aaaafasdfas');
+    console.log(track);
 
     // Update the redux storage
     // TO-DO: Need a cleaner way.

@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { connect } from 'react-redux';
+import { ScrollView } from 'react-native-gesture-handler';
 import { actionCreators } from '../actions/ReduxImplement';
 
 import MiniPlayer from '../components/mini-player/MiniPlayer';
@@ -42,8 +43,6 @@ class SearchPage extends Component {
       showPlaceHolder: true,
       recentSearches: TRACKS_2,
     };
-
-    console.log('constructor');
   }
 
   componentWillMount() {
@@ -105,14 +104,17 @@ class SearchPage extends Component {
     this.setState({
       recentSearches: recentSearches.filter((search, i) => i !== index),
     });
+  };
 
-    // console.log(recentSearches);
+  clearAllRecentSearches = () => {
+    this.setState({
+      recentSearches: [],
+    });
   };
 
   render() {
     const { showPlaceHolder, text, recentSearches } = this.state;
     const { playingTrack, paused, duration, currentTime } = this.props;
-    console.log(recentSearches.length);
     return (
       <View style={styles.container}>
         <View style={styles.searchSpace}>
@@ -126,10 +128,11 @@ class SearchPage extends Component {
 
           <View style={{ flex: 1 }}>
             {recentSearches.length !== 0 ? (
-              <View style={{ flex: 1 }}>
+              <ScrollView style={{ height: 400 }} showsHorizontalScrollIndicator={false}>
                 <Text style={styles.categoryText}> Recent Searches</Text>
                 <ResultList onRemoveItem={this.removeFromRecentSearches} data={recentSearches} />
-              </View>
+                <ClearText onPress={this.clearAllRecentSearches} />
+              </ScrollView>
             ) : (
               <EmptySearch />
             )}
@@ -154,50 +157,62 @@ class SearchPage extends Component {
 }
 
 const ResultList = ({ data, onRemoveItem }) => {
-  console.log('from list');
-  console.log(data);
   return (
     <FlatList
       style={styles.list}
       data={data}
       keyExtractor={(item, index) => index.toString()}
       renderItem={obj => (
-        <Item
-          data={obj.item}
-          onPressedRemove={() => {
-            console.log('still working');
-            onRemoveItem(obj.index);
-          }}
-        />
+        <Item data={obj.item} onPressedRemove={() => onRemoveItem(obj.index)} onPress={() => {}} />
       )}
     />
   );
 };
 
-const Item = ({ data, onPressedRemove }) => {
+const ClearText = ({ onPress }) => {
   return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: 'row',
-        paddingHorizontal: 20,
-        marginVertical: 12,
-        alignItems: 'center',
-      }}
-    >
-      <View style={{ flex: 0.2 }}>
-        <Image style={styles.image} source={{ uri: data.albumArtUrl }} />
+    <TouchableOpacity onPress={onPress}>
+      <Text
+        style={{
+          color: 'rgb(179, 179, 179)',
+          marginLeft: 20,
+          fontWeight: 'normal',
+          fontSize: 16,
+          marginTop: 10,
+        }}
+      >
+        Clear recent searches
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
+const Item = ({ data, onPressedRemove, onPress }) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          paddingHorizontal: 20,
+          marginVertical: 12,
+          alignItems: 'center',
+        }}
+      >
+        <View style={{ flex: 0.2 }}>
+          <Image style={styles.image} source={{ uri: data.albumArtUrl }} />
+        </View>
+        <View style={{ flex: 0.75, justifyContent: 'center' }}>
+          <Text style={styles.titleText}>{data.title}</Text>
+          <Text style={styles.artistText}>{data.artist}</Text>
+        </View>
+        <View style={{ flex: 0.05 }}>
+          <TouchableOpacity onPress={onPressedRemove}>
+            <Image style={styles.removeIcon} source={require('../images/ic-remove.png')} />
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={{ flex: 0.75, justifyContent: 'center' }}>
-        <Text style={styles.titleText}>{data.title}</Text>
-        <Text style={styles.artistText}>{data.artist}</Text>
-      </View>
-      <View style={{ flex: 0.05 }}>
-        <TouchableOpacity onPress={onPressedRemove}>
-          <Image style={styles.removeIcon} source={require('../images/ic-remove.png')} />
-        </TouchableOpacity>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -60,6 +60,7 @@ const TabNavigator = createBottomTabNavigator(
     Search: { screen: SearchPage },
   },
   {
+    initialRouteName: 'Player',
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused }) => getTabBarIcon(navigation, focused),
     }),

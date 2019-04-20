@@ -1,116 +1,65 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
-export default class TrackDetails extends Component {
-
-  onAddPress = () => {
-    // Inside proceeding
-
-    // Invoke the callback
-    if (typeof this.props.onAddPress === "function") {
-      this.props.onAddPress();
-    }
-  }
-
-  onMorePress = () => {
-    // Inside proceeding
-
-    // Invoke the callback
-    if (typeof this.props.onMorePress === "function") {
-      this.props.onMorePress();
-    }
-  }
-
-  onTitlePress = () => {
-    // Inside proceeding
-
-    // Invoke the callback
-    if (typeof this.props.onTitlePress === "function") {
-      this.props.onTitlePress();
-    }
-  }
-
-  onArtistPress = () => {
-    // Inside proceeding
-
-    // Invoke the callback
-    if (typeof this.props.onArtistPress === "function") {
-      this.props.onArtistPress();
-    }
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-
-        <TouchableOpacity onPress={this.props.onAddPress}>
-          <Image style={styles.button}
-            source={require('../../images/ic_add_circle_outline_white.png')} />
-        </TouchableOpacity>
-
-        <View style={styles.detailsWrapper}>
-          <Text style={styles.title} onPress={this.props.onTitlePress}>{this.props.title}</Text>
-          <Text style={styles.artist} onPress={this.props.onArtistPress}>{this.props.artist}</Text>
-        </View>
-
-        <TouchableOpacity onPress={this.props.onMorePress}>
-          <View style={styles.moreButton}>
-            <Image style={styles.moreButtonIcon}
-              source={require('../../images/ic_more_horiz_white.png')} />
-          </View>
-        </TouchableOpacity>
-
+const TrackDetails = ({
+  onTitlePress,
+  onArtistPress,
+  title,
+  artist,
+  onHeartPress,
+  liked = false,
+}) => {
+  return (
+    <View style={styles.container}>
+      <View style={styles.detailsWrapper}>
+        <Text style={styles.title} onPress={onTitlePress}>
+          {title}
+        </Text>
+        <Text style={styles.artist} onPress={onArtistPress}>
+          {artist}
+        </Text>
       </View>
-    )
-  }
-}
+      <View>
+        <TouchableOpacity onPress={onHeartPress}>
+          {!liked ? (
+            <Image style={styles.heartImage} source={require('../../images/ic-heart-empty.png')} />
+          ) : (
+            <Image style={styles.heartImage} source={require('../../images/ic-heart-color.png')} />
+          )}
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
+
+export default TrackDetails;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 24,
+    marginTop: 20,
     flexDirection: 'row',
-    paddingLeft: 20,
+    height: 60,
     alignItems: 'center',
-    paddingRight: 20,
+    justifyContent: 'space-between',
+    paddingHorizontal: 35,
   },
   detailsWrapper: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
+    marginTop: 5,
   },
   title: {
-    fontSize: 16,
+    fontSize: 26,
     fontWeight: 'bold',
     color: 'white',
-    textAlign: 'center',
   },
   artist: {
-    color: 'rgba(255, 255, 255, 0.72)',
-    fontSize: 12,
+    fontSize: 16,
     marginTop: 4,
+    color: '#b3b3b3',
+    fontWeight: '400',
   },
-  button: {
-    opacity: 0.72,
+  heartImage: {
+    height: 25,
+    width: 25,
   },
-  moreButton: {
-    borderColor: 'rgb(255, 255, 255)',
-    borderWidth: 2,
-    opacity: 0.72,
-    borderRadius: 10,
-    width: 20,
-    height: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  moreButtonIcon: {
-    height: 17,
-    width: 17,
-  }
 });
