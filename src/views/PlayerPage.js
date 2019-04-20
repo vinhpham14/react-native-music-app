@@ -76,23 +76,27 @@ class PlayerPage extends Component {
   };
 
   onBack = () => {
-    const { currentPosition, selectedTrack } = this.state;
+    const { currentTime, playlist } = this.props;
+    const { selectedTrack } = this.state;
 
-    if (currentPosition < 10 && selectedTrack > 0) {
+    if (currentTime < 10 && selectedTrack > 0) {
       this.videoPlayer !== undefined && this.videoPlayer.seek(0);
       this.setState({ isChanging: true });
-      setTimeout(
-        () =>
-          this.setState({
-            currentPosition: 0,
-            paused: false,
-            duration: 1,
-            isChanging: false,
-            selectedTrack: selectedTrack - 1,
-          }),
-        0
-      );
+      setTimeout(() => {
+        this.updatePaused(true);
+        this.updateCurrentTime(0);
+        this.updateDuration(1);
+        this.updatePlayingTrack(playlist.tracks[selectedTrack - 1]);
+        this.setState({
+          isChanging: false,
+          selectedTrack: selectedTrack - 1,
+        });
+      }, 0);
     } else {
+      this.updatePaused(true);
+      this.updateCurrentTime(0);
+      this.updateDuration(1);
+      this.updatePlayingTrack(playlist.tracks[selectedTrack]);
       this.videoPlayer.seek(0);
       this.setState({
         currentPosition: 0,
@@ -111,12 +115,12 @@ class PlayerPage extends Component {
       const nextTrack = shuffleOn
         ? Math.floor(Math.random() * playlist.tracks.length)
         : selectedTrack + 1;
-
       setTimeout(() => {
         this.updatePaused(true);
         this.updateCurrentTime(0);
+        this.updatePlayingTrack(playlist.tracks[nextTrack]);
+        this.updateDuration(1);
         this.setState({
-          duration: 1,
           isChanging: false,
           selectedTrack: nextTrack,
         });
@@ -157,17 +161,9 @@ class PlayerPage extends Component {
     const { playlist, currentTime, paused, duration, playingTrack } = this.props;
     const { selectedTrack, isChanging, repeatOn, shuffleOn } = this.state;
 
-    const track = playlist.tracks[selectedTrack];
-    console.log('aaaafasdfas');
-    console.log(track);
-
-    // Update the redux storage
-    // TO-DO: Need a cleaner way.
-    if (track !== playingTrack) this.updatePlayingTrack(track);
-
     const video = isChanging ? null : (
       <Video
-        source={{ uri: track.audioUrl }}
+        source={{ uri: playingTrack.audioUrl }}
         ref={ref => {
           this.videoPlayer = ref;
         }}
@@ -197,8 +193,8 @@ class PlayerPage extends Component {
             message="PLAYING FROM CHARTS"
             onPlaylistPress={() => this.setState({ showPlaylist: true })}
           />
-          <AlbumArt url={track.albumArtUrl} />
-          <TrackDetails title={track.title} artist={track.artist} />
+          <AlbumArt url={playingTrack.albumArtUrl} />
+          <TrackDetails title={playingTrack.title} artist={playingTrack.artist} />
           <SeekBar
             onSliding={this.onSliding}
             duration={duration}
@@ -258,6 +254,6 @@ const styles = {
   },
 };
 
-export default connect(({ playlist, paused, currentTime, duration }) => {
-  return { playlist, paused, currentTime, duration };
+export default connect(({ playlist, paused, currentTime, duration, playingTrack }) => {
+  return { playlist, paused, currentTime, duration, playingTrack };
 })(PlayerPage);

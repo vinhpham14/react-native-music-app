@@ -112,6 +112,11 @@ class SearchPage extends Component {
     });
   };
 
+  updatePlayingTrack = payload => {
+    const { dispatch } = this.props;
+    dispatch(actionCreators.setPlayingTrack(payload));
+  };
+
   render() {
     const { showPlaceHolder, text, recentSearches } = this.state;
     const { playingTrack, paused, duration, currentTime } = this.props;
@@ -130,7 +135,11 @@ class SearchPage extends Component {
             {recentSearches.length !== 0 ? (
               <ScrollView style={{ height: 400 }} showsHorizontalScrollIndicator={false}>
                 <Text style={styles.categoryText}> Recent Searches</Text>
-                <ResultList onRemoveItem={this.removeFromRecentSearches} data={recentSearches} />
+                <ResultList
+                  onRemoveItem={this.removeFromRecentSearches}
+                  data={recentSearches}
+                  onItemPressed={this.updatePlayingTrack}
+                />
                 <ClearText onPress={this.clearAllRecentSearches} />
               </ScrollView>
             ) : (
@@ -156,14 +165,18 @@ class SearchPage extends Component {
   }
 }
 
-const ResultList = ({ data, onRemoveItem }) => {
+const ResultList = ({ data, onRemoveItem, onItemPressed }) => {
   return (
     <FlatList
       style={styles.list}
       data={data}
       keyExtractor={(item, index) => index.toString()}
       renderItem={obj => (
-        <Item data={obj.item} onPressedRemove={() => onRemoveItem(obj.index)} onPress={() => {}} />
+        <Item
+          data={obj.item}
+          onPressedRemove={() => onRemoveItem(obj.index)}
+          onPress={() => onItemPressed(obj.item)}
+        />
       )}
     />
   );
