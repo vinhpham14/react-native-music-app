@@ -136,6 +136,8 @@ class PlayerPage extends Component {
     }
   };
 
+  onChangeSong = () => {};
+
   render() {
     const { playlist } = this.props;
 
@@ -244,6 +246,6 @@ const styles = {
   },
 };
 
-export default connect(state => {
-  return { playlist: state.playlist };
+export default connect(({ playlist }) => {
+  return { playlist };
 })(PlayerPage);

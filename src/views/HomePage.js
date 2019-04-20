@@ -4,21 +4,36 @@ import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import SubjectList from '../components/subject-list/SubjectList';
 import { actionCreators } from '../actions/ReduxImplement';
+import MiniPlayer from '../components/mini-player/MiniPlayer';
 
 class HomePage extends Component {
   constructor(props) {
     super(props);
 
-    const { store } = this.props;
-    const { playingSong, playlist, screen, currentTime, listOfSubjectInfo } = store;
-    this.state = {
-      playingSong,
+    const {
+      playingTrack,
       playlist,
       screen,
       currentTime,
       listOfSubjectInfo,
+      isPlaying,
+    } = this.props;
+    this.state = {
+      playingTrack,
+      playlist,
+      screen,
+      currentTime,
+      listOfSubjectInfo,
+      isPlaying,
     };
   }
+
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   // console.log('getDerivedStateFromProps of homepage:');
+  //   // console.log(nextProps.isPlaying);
+  //   // if (nextProps.isPlaying !== prevState.isPlaying) return { isPlaying: nextProps.isPlaying };
+  //   // return {};
+  // }
 
   onPressedPlaylist = item => {
     const { dispatch, navigation } = this.props;
@@ -29,23 +44,44 @@ class HomePage extends Component {
     navigation.navigate('Player');
   };
 
+  togglePlayingState = () => {
+    const { dispatch, isPlaying } = this.props;
+    dispatch(actionCreators.setMusicIsPlaying(!isPlaying));
+
+    // NOTE:
+    // After dispatch, the getDerivedStateFromProps() method
+    // have not been called yet util finishing this method
+  };
+
   render() {
-    const { listOfSubjectInfo } = this.state;
+    const { listOfSubjectInfo, isPlaying, playingTrack } = this.props;
+    console.log('Inside the render of HomPage: ');
+    console.log(this.props);
     return (
-      <View style={styles.container}>
-        <LinearGradient
-          colors={['#2b3535', '#121212', '#121212']}
-          style={styles.linearGradientEffect}
-        />
-        <FlatList
-          style={styles.flatList}
-          data={listOfSubjectInfo}
-          renderItem={({ item }) => (
-            <Item subjectInfo={item} onPressedItem={this.onPressedPlaylist} />
-          )}
-          keyExtractor={(item, index) => index.toString()}
-          ListFooterComponent={() => <View style={{ height: 300 }} />}
-        />
+      <View style={{ flex: 1 }}>
+        <View style={styles.container}>
+          <LinearGradient
+            colors={['#2b3535', '#121212', '#121212']}
+            style={styles.linearGradientEffect}
+          />
+          <FlatList
+            style={styles.flatList}
+            data={listOfSubjectInfo}
+            renderItem={({ item }) => (
+              <Item subjectInfo={item} onPressedItem={this.onPressedPlaylist} />
+            )}
+            keyExtractor={(item, index) => index.toString()}
+            ListFooterComponent={() => <View style={{ height: 150 }} />}
+          />
+        </View>
+        <View style={{ flex: 0.095, backgroundColor: '#121212' }}>
+          <MiniPlayer
+            songName={playingTrack.title}
+            artist={playingTrack.artist}
+            isPlaying={isPlaying}
+            onPressedPlay={this.togglePlayingState}
+          />
+        </View>
       </View>
     );
   }
@@ -59,10 +95,11 @@ const Item = ({ subjectInfo, onPressedItem }) => {
   );
 };
 
-const { height, width } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 const verticalMarginOfSubjectList = 0.036;
 const styles = StyleSheet.create({
   container: {
+    flex: 0.905,
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     backgroundColor: 'blue',
@@ -70,13 +107,11 @@ const styles = StyleSheet.create({
   linearGradientEffect: {
     width: '100%',
     height: '100%',
-    // height: 200,
   },
   flatList: {
     position: 'absolute',
     width: '100%',
     height: '100%',
-    // display: 'flex',
     top: 30,
   },
   item: {
@@ -85,6 +120,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(state => {
-  return { store: state };
-})(HomePage);
+export default connect(
+  ({ playingTrack, playlist, screen, currentTime, listOfSubjectInfo, isPlaying }) => {
+    return {
+      playingTrack,
+      playlist,
+      screen,
+      currentTime,
+      listOfSubjectInfo,
+      isPlaying,
+    };
+  }
+)(HomePage);

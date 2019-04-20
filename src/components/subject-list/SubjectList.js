@@ -74,7 +74,7 @@ const Description = ({ description }) => {
   return null;
 };
 
-const { height, width } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 const imageSize = width * 0.36;
 const styles = StyleSheet.create({
   itemContainer: {

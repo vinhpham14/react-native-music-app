@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
 
 import HomePage from './src/views/HomePage';
 import PlayerPage from './src/views/PlayerPage';
-import { reducer, actionCreators } from './src/actions/ReduxImplement';
+import { reducer } from './src/actions/ReduxImplement';
 import IconGenerator, { iconNames } from './src/components/icon-generator/IconGenerator';
 
 // Get all the data
@@ -14,27 +14,28 @@ import IconGenerator, { iconNames } from './src/components/icon-generator/IconGe
 const store = createStore(reducer);
 
 export default class App extends Component {
-  store = createStore(reducer);
+  // store = createStore(reducer);
 
   constructor(props) {
     super(props);
 
     const { playingTrack, playlist, screen, currentTime, listOfSubjectInfo } = store.getState();
 
-    this.state = {
-      playingTrack,
-      playlist,
-      screen,
-      currentTime,
-      listOfSubjectInfo,
-    };
+    // this.state = {
+    //   playingTrack,
+    //   playlist,
+    //   screen,
+    //   currentTime,
+    //   listOfSubjectInfo,
+    // };
   }
 
   componentWillMount() {
     this.unsubscribe = store.subscribe(() => {
-      const { playingSong, playlist, screen, currentTime, listOfSubjectInfo } = store.getState();
-
-      this.setState({ playingSong, playlist, screen, currentTime, listOfSubjectInfo });
+      // const { playingSong, playlist, screen, currentTime, listOfSubjectInfo } = store.getState();
+      // this.setState({ playingSong, playlist, screen, currentTime, listOfSubjectInfo });
+      console.log('Store has been modified: ');
+      console.log(store.getState());
     });
   }
 
@@ -43,8 +44,6 @@ export default class App extends Component {
   }
 
   render() {
-    // const { listOfSubjectInfo } = this.state;
-
     return (
       <Provider store={store}>
         <AppContainer />
@@ -69,9 +68,9 @@ const TabNavigator = createBottomTabNavigator(
         justifyContent: 'center',
         paddingHorizontal: 50,
       },
-      labelStyle: { fontWeight: '300' },
+      labelStyle: { fontWeight: '400' },
       activeTintColor: 'white',
-      inactiveTintColor: 'white',
+      inactiveTintColor: 'rgb(122,123,125)',
     },
   }
 );
@@ -80,9 +79,9 @@ const getTabBarIcon = (navigation, focused) => {
   const { routeName } = navigation.state;
   let iconName = '';
   if (routeName === 'Home') {
-    iconName = iconNames.Home;
+    iconName = iconNames.HomeTabButton;
   } else if (routeName === 'Player') {
-    iconName = iconNames.Player;
+    iconName = iconNames.PlayerTabButton;
   }
 
   return <IconGenerator iconName={iconName} size={25} onFocused={focused} />;
@@ -90,13 +89,11 @@ const getTabBarIcon = (navigation, focused) => {
 
 const AppContainer = createAppContainer(TabNavigator);
 
-const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   nagivatior: {
-    flex: 0.086,
     backgroundColor: 'rgb(34,35,38)',
   },
 });

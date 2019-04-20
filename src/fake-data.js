@@ -81,7 +81,7 @@ export const TRACKS_2 = [
     albumArtUrl:
       'https://photo-resize-zmp3.zadn.vn/w240h240_jpeg/cover/3/4/8/9/3489afd794b9fd47cfa972aa7271e13e.jpg',
     audioUrl:
-      'https://data.chiasenhac.com/dataxx/00/downloads/1828/4/1827610-ae88aca0/128/Chia%20Tay%20-%20Bui%20Anh%20Tuan.mp3',
+      'https://data.chiasenhac.com/dataxx/25/downloads/2001/5/2000333-19b6ca75/128/On%20My%20Way%20-%20Alan%20Walker_Sabrina%20Carpente.mp3',
   },
   {
     title: 'Ex Hate Me',

@@ -2,24 +2,38 @@ import React from 'react';
 import { Image } from 'react-native';
 
 export const iconNames = {
-  Home: 'home',
-  Player: 'player',
+  HomeTabButton: 'home',
+  PlayerTabButton: 'player-arrow',
+  UpArrow: 'up-arrow',
+  PlayMusic: 'play-music-button',
+  PauseMusic: 'pause',
 };
 
-const IconGenerator = ({ iconName, size, onFocused }) => {
-  console.log('inside the icon generator');
-  console.log(iconName);
-  console.log(size);
-  console.log(onFocused);
-
-  const opacity = onFocused ? 1 : 0.5;
+const IconGenerator = ({ iconName, size, onFocused = 1 }) => {
+  const opacity = onFocused ? 1 : 0.4;
 
   let src = '';
-  if (iconName === iconNames.Home) src = require('../../images/ic-home.png');
-  if (iconName === iconNames.Player) src = require('../../images/ic-play-arrow.png');
+  switch (iconName) {
+    case iconNames.HomeTabButton:
+      src = require('../../images/ic-home.png');
+      break;
+    case iconNames.PlayerTabButton:
+      src = require('../../images/ic-player-arrow.png');
+      break;
+    case iconNames.UpArrow:
+      src = require('../../images/ic-up-arrow.png');
+      break;
+    case iconNames.PlayMusic:
+      src = require('../../images/ic-play-arrow.png');
+      break;
+    case iconNames.PauseMusic:
+      src = require('../../images/ic-pause.png');
+      break;
+    default:
+      console.log(`Error to get the image src of icon ${iconName.toString()}`);
+      break;
+  }
 
-  // eslint-disable-next-line global-require
-  // eslint-disable-next-line import/no-dynamic-require
   return <Image style={{ height: size, width: size, opacity }} source={src} />;
 };
 
