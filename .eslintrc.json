@@ -15,6 +15,7 @@
     "react/no-this-in-sfc": "off",
     "no-console": "off",
     "global-require": "off",
+    "react/no-unused-state": "off",
     "react/jsx-filename-extension": [
       1,
       {

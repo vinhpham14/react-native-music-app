@@ -2,29 +2,22 @@ import React, { Component } from 'react';
 import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
-import SubjectList from '../components/subject-list/SubjectList';
 import { actionCreators } from '../actions/ReduxImplement';
 import MiniPlayer from '../components/mini-player/MiniPlayer';
+import SubjectList from '../components/subject-list/SubjectList';
 
 class HomePage extends Component {
   constructor(props) {
     super(props);
 
-    const {
-      playingTrack,
-      playlist,
-      screen,
-      currentTime,
-      listOfSubjectInfo,
-      isPlaying,
-    } = this.props;
+    const { playingTrack, playlist, screen, currentTime, listOfSubjectInfo, paused } = this.props;
     this.state = {
       playingTrack,
       playlist,
       screen,
       currentTime,
       listOfSubjectInfo,
-      isPlaying,
+      paused,
     };
   }
 
@@ -45,18 +38,21 @@ class HomePage extends Component {
   };
 
   togglePlayingState = () => {
-    const { dispatch, isPlaying } = this.props;
-    dispatch(actionCreators.setMusicIsPlaying(!isPlaying));
+    const { dispatch, paused } = this.props;
+    dispatch(actionCreators.setPaused(!paused));
 
     // NOTE:
     // After dispatch, the getDerivedStateFromProps() method
     // have not been called yet util finishing this method
   };
 
+  navigateToPlayer = () => {
+    const { navigation } = this.props;
+    navigation.navigate('Player');
+  };
+
   render() {
-    const { listOfSubjectInfo, isPlaying, playingTrack } = this.props;
-    console.log('Inside the render of HomPage: ');
-    console.log(this.props);
+    const { listOfSubjectInfo, paused, playingTrack, duration, currentTime } = this.props;
     return (
       <View style={{ flex: 1 }}>
         <View style={styles.container}>
@@ -78,8 +74,12 @@ class HomePage extends Component {
           <MiniPlayer
             songName={playingTrack.title}
             artist={playingTrack.artist}
-            isPlaying={isPlaying}
+            paused={paused}
             onPressedPlay={this.togglePlayingState}
+            onPressedUpArrow={this.navigateToPlayer}
+            onPressedText={this.navigateToPlayer}
+            duration={duration}
+            currentTime={currentTime}
           />
         </View>
       </View>
@@ -121,14 +121,15 @@ const styles = StyleSheet.create({
 });
 
 export default connect(
-  ({ playingTrack, playlist, screen, currentTime, listOfSubjectInfo, isPlaying }) => {
+  ({ playingTrack, playlist, screen, currentTime, listOfSubjectInfo, paused, duration }) => {
     return {
       playingTrack,
       playlist,
       screen,
       currentTime,
       listOfSubjectInfo,
-      isPlaying,
+      paused,
+      duration,
     };
   }
 )(HomePage);

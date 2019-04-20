@@ -6,6 +6,7 @@ import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
 
 import HomePage from './src/views/HomePage';
 import PlayerPage from './src/views/PlayerPage';
+import SearchPage from './src/views/SearchPage';
 import { reducer } from './src/actions/ReduxImplement';
 import IconGenerator, { iconNames } from './src/components/icon-generator/IconGenerator';
 
@@ -56,6 +57,7 @@ const TabNavigator = createBottomTabNavigator(
   {
     Home: { screen: HomePage },
     Player: { screen: PlayerPage },
+    Search: { screen: SearchPage },
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -82,6 +84,8 @@ const getTabBarIcon = (navigation, focused) => {
     iconName = iconNames.HomeTabButton;
   } else if (routeName === 'Player') {
     iconName = iconNames.PlayerTabButton;
+  } else if (routeName === 'Search') {
+    iconName = iconNames.SearchTabButton;
   }
 
   return <IconGenerator iconName={iconName} size={25} onFocused={focused} />;

@@ -6,7 +6,8 @@ export const types = {
   SET_CURRENT_SONG_TIME: 'SET_CURRENT_SONG_TIME',
   SET_CURRENT_SCREEN: 'SET_CURRENT_SCREEN',
   SET_LIST_OF_SUBJECT_INFO: 'SET_LIST_OF_SUBJECT_INFO',
-  SET_MUSIC_IS_PLAYING: 'SET_MUSIC_IS_PLAYING',
+  SET_PAUSED: 'SET_PAUSED',
+  SET_DURATION: 'SET_DURATION',
 };
 
 // Helper functions to dispatch actions, optionally with payloads
@@ -26,10 +27,11 @@ export const actionCreators = {
   setListOfSubjectInfo: listOfSubjectInfo => {
     return { type: types.SET_LIST_OF_SUBJECT_INFO, payload: listOfSubjectInfo };
   },
-  setMusicIsPlaying: isPlaying => {
-    console.log('In set Music: ');
-    console.log(isPlaying);
-    return { type: types.SET_MUSIC_IS_PLAYING, payload: isPlaying };
+  setPaused: paused => {
+    return { type: types.SET_PAUSED, payload: paused };
+  },
+  setDuration: duration => {
+    return { type: types.SET_DURATION, payload: duration };
   },
 };
 
@@ -41,9 +43,10 @@ const initialState = {
   },
   playlist: PLAYLIST,
   screen: 'home',
-  currentTime: 10,
+  currentTime: 0,
   listOfSubjectInfo: LIST_SUBJECT_INFO,
-  isPlaying: false,
+  paused: true,
+  duration: 1,
 };
 
 // Function to handle actions and update the state of the store.
@@ -81,10 +84,16 @@ export const reducer = (state = initialState, action) => {
         playingTrack: payload,
       };
     }
-    case types.SET_MUSIC_IS_PLAYING: {
+    case types.SET_PAUSED: {
       return {
         ...state,
-        isPlaying: payload,
+        paused: payload,
+      };
+    }
+    case types.SET_DURATION: {
+      return {
+        ...state,
+        duration: payload,
       };
     }
     default: {

@@ -10,6 +10,7 @@ import TrackDetails from '../components/track-details/TrackDetails';
 import SeekBar from '../components/seek-bar/SeekBar';
 import Controls from '../components/controls/Controls';
 import Playlist from '../components/playlist/Playlist';
+import { actionCreators } from '../actions/ReduxImplement';
 
 class PlayerPage extends Component {
   constructor(props) {
@@ -17,9 +18,7 @@ class PlayerPage extends Component {
     const { playlist } = this.props;
 
     this.state = {
-      paused: false,
       duration: 1,
-      currentPosition: 0,
       selectedTrack: 0,
       repeatOn: false,
       shuffleOn: false,
@@ -41,24 +40,24 @@ class PlayerPage extends Component {
   }
 
   setDuration = data => {
-    this.setState({
-      duration: Math.floor(data.duration),
-    });
+    const _duration = Math.floor(data.duration);
+    this.updateDuration(_duration);
   };
 
   setCurrentPosition = data => {
-    this.setState({
-      currentPosition: Math.floor(data.currentTime),
-    });
+    const newTime = Math.floor(data.currentTime);
+    this.updateCurrentTime(newTime);
   };
 
   onSliding = time => {
-    const ttime = Math.round(time);
-    this.videoPlayer.seek(ttime);
-    this.setState({
-      currentPosition: ttime,
-      paused: true,
-    });
+    const _time = Math.round(time);
+    this.videoPlayer.seek(_time);
+    // this.setState({
+    //   currentPosition: _time,
+    //   paused: true,
+    // });
+    this.updateCurrentTime(_time);
+    this.updatePaused(true);
   };
 
   videoError = () => {
@@ -113,17 +112,15 @@ class PlayerPage extends Component {
         ? Math.floor(Math.random() * playlist.tracks.length)
         : selectedTrack + 1;
 
-      setTimeout(
-        () =>
-          this.setState({
-            currentPosition: 0,
-            duration: 1,
-            paused: false,
-            isChanging: false,
-            selectedTrack: nextTrack,
-          }),
-        0
-      );
+      setTimeout(() => {
+        this.updatePaused(true);
+        this.updateCurrentTime(0);
+        this.setState({
+          duration: 1,
+          isChanging: false,
+          selectedTrack: nextTrack,
+        });
+      }, 0);
     }
   };
 
@@ -136,22 +133,35 @@ class PlayerPage extends Component {
     }
   };
 
-  onChangeSong = () => {};
+  updatePaused = payload => {
+    const { dispatch } = this.props;
+    dispatch(actionCreators.setPaused(payload));
+  };
+
+  updateCurrentTime = payload => {
+    const { dispatch } = this.props;
+    dispatch(actionCreators.setCurrentSongTime(payload));
+  };
+
+  updateDuration = payload => {
+    const { dispatch } = this.props;
+    dispatch(actionCreators.setDuration(payload));
+  };
+
+  updatePlayingTrack = payload => {
+    const { dispatch } = this.props;
+    dispatch(actionCreators.setPlayingTrack(payload));
+  };
 
   render() {
-    const { playlist } = this.props;
-
-    const {
-      selectedTrack,
-      isChanging,
-      paused,
-      duration,
-      currentPosition,
-      repeatOn,
-      shuffleOn,
-    } = this.state;
+    const { playlist, currentTime, paused, duration, playingTrack } = this.props;
+    const { selectedTrack, isChanging, repeatOn, shuffleOn } = this.state;
 
     const track = playlist.tracks[selectedTrack];
+
+    // Update the redux storage
+    // TO-DO: Need a cleaner way.
+    if (track !== playingTrack) this.updatePlayingTrack(track);
 
     const video = isChanging ? null : (
       <Video
@@ -190,8 +200,8 @@ class PlayerPage extends Component {
           <SeekBar
             onSliding={this.onSliding}
             duration={duration}
-            currentPosition={currentPosition}
-            onSlidingComplete={() => this.setState({ paused: false })}
+            currentPosition={currentTime}
+            onSlidingComplete={() => this.updatePaused(false)}
           />
           <Controls
             onPressRepeat={() => this.setState({ repeatOn: !repeatOn })}
@@ -199,8 +209,8 @@ class PlayerPage extends Component {
             shuffleOn={shuffleOn}
             forwardDisabled={selectedTrack === playlist.tracks.length - 1}
             onPressShuffle={() => this.setState({ shuffleOn: !shuffleOn })}
-            onPressPlay={() => this.setState({ paused: false })}
-            onPressPause={() => this.setState({ paused: true })}
+            onPressPlay={() => this.updatePaused(false)}
+            onPressPause={() => this.updatePaused(true)}
             onBack={this.onBack}
             onForward={this.onForward}
             paused={paused}
@@ -246,6 +256,6 @@ const styles = {
   },
 };
 
-export default connect(({ playlist }) => {
-  return { playlist };
+export default connect(({ playlist, paused, currentTime, duration }) => {
+  return { playlist, paused, currentTime, duration };
 })(PlayerPage);
