@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
 import {
@@ -12,8 +13,8 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
+import LinearGradient from 'react-native-linear-gradient';
 import { actionCreators } from '../actions/ReduxImplement';
-
 import MiniPlayer from '../components/mini-player/MiniPlayer';
 
 const TRACKS_2 = [
@@ -34,6 +35,33 @@ const TRACKS_2 = [
   },
 ];
 
+// const SEARCH_RESULT = [
+//   {
+//     title: 'Chia Tay',
+//     artist: 'Bùi Anh Tuấn',
+//     albumArtUrl:
+//       'https://photo-resize-zmp3.zadn.vn/w240h240_jpeg/cover/3/4/8/9/3489afd794b9fd47cfa972aa7271e13e.jpg',
+//     audioUrl:
+//       'https://vnso-zn-15-tf-mp3-s1-zmp3.zadn.vn/d6ade15e3a1ad3448a0b/3067141731979981036?authen=exp=1555817777~acl=/d6ade15e3a1ad3448a0b/*~hmac=b7a4798f618ced153050dbf05059ad04&filename=Chia-Tay-Original-Version-By-Hai-Au-Bui-Anh-Tuan.mp3',
+//   },
+//   {
+//     title: 'Ex Hate Me',
+//     artist: 'Bray; Masew',
+//     albumArtUrl: 'https://avatar-nct.nixcdn.com/song/2019/02/13/7/c/9/3/1550063179723.jpg',
+//     audioUrl:
+//       'https://data.chiasenhac.com/downloads/2005/1/2004406-0a888aeb/128/Ex%20Hate%20Me%20-%20Bray_Masew.mp3',
+//   },
+//   {
+//     title: 'Ex Hate Me',
+//     artist: 'Bray; Masew',
+//     albumArtUrl: 'https://avatar-nct.nixcdn.com/song/2019/02/13/7/c/9/3/1550063179723.jpg',
+//     audioUrl:
+//       'https://data.chiasenhac.com/downloads/2005/1/2004406-0a888aeb/128/Ex%20Hate%20Me%20-%20Bray_Masew.mp3',
+//   },
+// ];
+
+const SEARCH_RESULT = [];
+
 const placeHolderText = 'Search';
 class SearchPage extends Component {
   constructor(props) {
@@ -42,6 +70,9 @@ class SearchPage extends Component {
       text: placeHolderText,
       showPlaceHolder: true,
       recentSearches: TRACKS_2,
+      showResult: false,
+      searchResults: [],
+      keySearch: '',
     };
   }
 
@@ -69,10 +100,15 @@ class SearchPage extends Component {
     const { showPlaceHolder } = this.state;
     if (showPlaceHolder === true) {
       this.setState({
-        text: '          ',
         showPlaceHolder: false,
       });
     }
+
+    // Clear text on focus
+    this.setState({
+      text: '          ',
+      keySearch: '',
+    });
   };
 
   onPressedPlaylist = item => {
@@ -117,8 +153,26 @@ class SearchPage extends Component {
     dispatch(actionCreators.setPlayingTrack(payload));
   };
 
+  onSubmitEditing = text => {
+    // TO-DO: Get list of results matches with input
+    const result = SEARCH_RESULT;
+
+    this.setState({
+      showResult: true,
+      searchResults: result,
+      keySearch: text,
+    });
+  };
+
   render() {
-    const { showPlaceHolder, text, recentSearches } = this.state;
+    const {
+      showPlaceHolder,
+      text,
+      recentSearches,
+      showResult,
+      searchResults,
+      keySearch,
+    } = this.state;
     const { playingTrack, paused, duration, currentTime } = this.props;
     return (
       <View style={styles.container}>
@@ -129,13 +183,21 @@ class SearchPage extends Component {
             onBlur={this.onBlurInput}
             onFocus={this.onFocusInput}
             onChangeText={value => this.setState({ text: `          ${value.trim()}` })}
+            onSubmitEditing={value => this.onSubmitEditing(value.nativeEvent.text.trim())}
           />
 
           <View style={{ flex: 1 }}>
-            {recentSearches.length !== 0 ? (
+            {/* TO-DO: Need a cleaner way */}
+            {showResult ? (
+              <SearchResult
+                data={searchResults}
+                onItemPressed={this.updatePlayingTrack}
+                keySearch={keySearch}
+              />
+            ) : recentSearches.length !== 0 ? (
               <ScrollView style={{ height: 400 }} showsHorizontalScrollIndicator={false}>
                 <Text style={styles.categoryText}> Recent Searches</Text>
-                <ResultList
+                <RecentSearchList
                   onRemoveItem={this.removeFromRecentSearches}
                   data={recentSearches}
                   onItemPressed={this.updatePlayingTrack}
@@ -165,7 +227,7 @@ class SearchPage extends Component {
   }
 }
 
-const ResultList = ({ data, onRemoveItem, onItemPressed }) => {
+const RecentSearchList = ({ data, onRemoveItem, onItemPressed }) => {
   return (
     <FlatList
       style={styles.list}
@@ -179,6 +241,24 @@ const ResultList = ({ data, onRemoveItem, onItemPressed }) => {
         />
       )}
     />
+  );
+};
+
+const SearchResult = ({ data, keySearch, onItemPressed }) => {
+  return data.length > 0 ? (
+    <View style={{ flex: 1 }}>
+      <LinearGradient colors={['#2b3535', '#121212']} style={{ width: '100%', height: '100%' }} />
+      <FlatList
+        style={{ position: 'absolute', width: '100%', height: '100%', top: 30 }}
+        data={data}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={obj => (
+          <Item data={obj.item} onPress={() => onItemPressed(obj.item)} enableRemove={false} />
+        )}
+      />
+    </View>
+  ) : (
+    <NotFound keySearch={keySearch} />
   );
 };
 
@@ -200,7 +280,7 @@ const ClearText = ({ onPress }) => {
   );
 };
 
-const Item = ({ data, onPressedRemove, onPress }) => {
+const Item = ({ data, onPressedRemove, onPress, enableRemove = true }) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View
@@ -220,9 +300,11 @@ const Item = ({ data, onPressedRemove, onPress }) => {
           <Text style={styles.artistText}>{data.artist}</Text>
         </View>
         <View style={{ flex: 0.05 }}>
-          <TouchableOpacity onPress={onPressedRemove}>
-            <Image style={styles.removeIcon} source={require('../images/ic-remove.png')} />
-          </TouchableOpacity>
+          {enableRemove ? (
+            <TouchableOpacity onPress={onPressedRemove}>
+              <Image style={styles.removeIcon} source={require('../images/ic-remove.png')} />
+            </TouchableOpacity>
+          ) : null}
         </View>
       </View>
     </TouchableOpacity>
@@ -243,6 +325,36 @@ const EmptySearch = () => {
   );
 };
 
+const NotFound = ({ keySearch }) => {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Image style={styles.emptySearchImage} source={require('../images/img-flag.png')} />
+      <Text
+        style={{
+          color: 'white',
+          fontWeight: 'normal',
+          fontSize: 16,
+          marginTop: 25,
+          textAlign: 'center',
+        }}
+      >
+        No results found for {'\n'} {`"${keySearch.trim()}"`}
+      </Text>
+      <Text
+        style={{
+          color: 'white',
+          fontWeight: 'normal',
+          fontSize: 12,
+          marginTop: 5,
+          textAlign: 'center',
+        }}
+      >
+        Please check you have the right spelling, or {'\n'} try different keywords
+      </Text>
+    </View>
+  );
+};
+
 const { width } = Dimensions.get('window');
 const imageSize = 0.15 * width;
 const styles = StyleSheet.create({
@@ -253,6 +365,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: 'rgb(18, 18, 18)',
+    // backgroundColor: 'red',
   },
   searchSpace: {
     flex: 0.905,

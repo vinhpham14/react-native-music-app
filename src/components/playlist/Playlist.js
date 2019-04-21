@@ -22,7 +22,7 @@ export default class Playlist extends Component {
   }
 
   render() {
-    const { playlist } = this.props;
+    const { playlist, onTrackPressed, playingTrack } = this.props;
 
     return (
       <View>
@@ -42,11 +42,24 @@ export default class Playlist extends Component {
             style={styles.list}
             data={playlist.tracks}
             renderItem={({ item }) => (
-              <View style={styles.playlistItem}>
-                <Text style={styles.playlistItemTitle}>{item.title}</Text>
-                <Text style={styles.playlistItemMeta}>{`${item.artist}`}</Text>
-                {/* <Text style={styles.playlistItemMeta}>{`${item.artist} • ${item.album}`}</Text> */}
-              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  onTrackPressed(item);
+                }}
+              >
+                <View style={styles.playlistItem}>
+                  <Text
+                    style={[
+                      styles.playlistItemTitle,
+                      item === playingTrack ? styles.selectedTrack : {},
+                    ]}
+                  >
+                    {item.title}
+                  </Text>
+                  <Text style={styles.playlistItemMeta}>{`${item.artist}`}</Text>
+                  {/* <Text style={styles.playlistItemMeta}>{`${item.artist} • ${item.album}`}</Text> */}
+                </View>
+              </TouchableOpacity>
             )}
             keyExtractor={(item, index) => index.toString()}
           />
@@ -125,5 +138,10 @@ const styles = StyleSheet.create({
     // fontFamily: 'gibson-regular',
     color: '#b9bdbe',
     fontSize: 15,
+  },
+  selectedTrack: {
+    fontSize: 18,
+    color: 'rgb(28, 181, 82)',
+    fontWeight: 'bold',
   },
 });

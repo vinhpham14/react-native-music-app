@@ -223,6 +223,11 @@ class PlayerPage extends Component {
           this.setState({ showPlaylist: false });
         }}
         playlist={playlist}
+        onTrackPressed={item => {
+          this.updatePlayingTrack(item);
+          this.setState({ showPlaylist: false });
+        }}
+        playingTrack={playingTrack}
       />
     );
 

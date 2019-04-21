@@ -5,7 +5,7 @@ export const TRACKS_3 = [
     albumArtUrl:
       'https://photo-resize-zmp3.zadn.vn/w240h240_jpeg/cover/3/4/8/9/3489afd794b9fd47cfa972aa7271e13e.jpg',
     audioUrl:
-      'https://data.chiasenhac.com/dataxx/00/downloads/1828/4/1827610-ae88aca0/128/Chia%20Tay%20-%20Bui%20Anh%20Tuan.mp3',
+      'https://vnso-zn-15-tf-mp3-s1-zmp3.zadn.vn/d6ade15e3a1ad3448a0b/3067141731979981036?authen=exp=1555817777~acl=/d6ade15e3a1ad3448a0b/*~hmac=b7a4798f618ced153050dbf05059ad04&filename=Chia-Tay-Original-Version-By-Hai-Au-Bui-Anh-Tuan.mp3',
   },
   {
     title: 'Ex Hate Me',
@@ -99,7 +99,7 @@ export const TRACKS_1 = [
     albumArtUrl:
       'https://photo-resize-zmp3.zadn.vn/w240h240_jpeg/cover/3/4/8/9/3489afd794b9fd47cfa972aa7271e13e.jpg',
     audioUrl:
-      'https://data.chiasenhac.com/dataxx/00/downloads/1828/4/1827610-ae88aca0/128/Chia%20Tay%20-%20Bui%20Anh%20Tuan.mp3',
+      'https://vnso-zn-15-tf-mp3-s1-zmp3.zadn.vn/d6ade15e3a1ad3448a0b/3067141731979981036?authen=exp=1555817777~acl=/d6ade15e3a1ad3448a0b/*~hmac=b7a4798f618ced153050dbf05059ad04&filename=Chia-Tay-Original-Version-By-Hai-Au-Bui-Anh-Tuan.mp3',
   },
 ];
 
