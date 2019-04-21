@@ -155,13 +155,17 @@ class SearchPage extends Component {
 
   onSubmitEditing = text => {
     // TO-DO: Get list of results matches with input
-    const result = SEARCH_RESULT;
-
-    this.setState({
-      showResult: true,
-      searchResults: result,
-      keySearch: text,
-    });
+    console.log(text);
+    fetch(`http://192.168.1.165:3000/api/search/${text}`)
+      .then(res => res.json())
+      .then(json => {
+        console.log(json);
+        this.setState({
+          searchResults: json,
+          showResult: true,
+          keySearch: text,
+        });
+      });
   };
 
   render() {
@@ -174,6 +178,8 @@ class SearchPage extends Component {
       keySearch,
     } = this.state;
     const { playingTrack, paused, duration, currentTime } = this.props;
+    console.log('<><><><<>><><<><');
+    console.log(searchResults);
     return (
       <View style={styles.container}>
         <View style={styles.searchSpace}>
@@ -249,6 +255,7 @@ const RecentSearchList = ({ data, onRemoveItem, onItemPressed }) => {
 
 // Compare to RecentSearchList, this has gradient color
 export const SearchResult = ({ data, keySearch, onItemPressed, showEmptyMessage = true }) => {
+  console.log(data);
   return data.length > 0 && showEmptyMessage ? (
     <View style={{ flex: 1, marginTop: 30 }}>
       <LinearGradient colors={['#2b3535', '#121212']} style={{ width: '100%', height: '100%' }} />
