@@ -70,8 +70,8 @@ const TabNavigator = createBottomTabNavigator(
       style: {
         backgroundColor: 'rgb(34,35,38)',
         alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: 50,
+        justifyContent: 'space-between',
+        paddingHorizontal: 40,
       },
       labelStyle: { fontWeight: '400' },
       activeTintColor: 'white',

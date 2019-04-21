@@ -35,31 +35,6 @@ const TRACKS_2 = [
   },
 ];
 
-// const SEARCH_RESULT = [
-//   {
-//     title: 'Chia Tay',
-//     artist: 'Bùi Anh Tuấn',
-//     albumArtUrl:
-//       'https://photo-resize-zmp3.zadn.vn/w240h240_jpeg/cover/3/4/8/9/3489afd794b9fd47cfa972aa7271e13e.jpg',
-//     audioUrl:
-//       'https://vnso-zn-15-tf-mp3-s1-zmp3.zadn.vn/d6ade15e3a1ad3448a0b/3067141731979981036?authen=exp=1555817777~acl=/d6ade15e3a1ad3448a0b/*~hmac=b7a4798f618ced153050dbf05059ad04&filename=Chia-Tay-Original-Version-By-Hai-Au-Bui-Anh-Tuan.mp3',
-//   },
-//   {
-//     title: 'Ex Hate Me',
-//     artist: 'Bray; Masew',
-//     albumArtUrl: 'https://avatar-nct.nixcdn.com/song/2019/02/13/7/c/9/3/1550063179723.jpg',
-//     audioUrl:
-//       'https://data.chiasenhac.com/downloads/2005/1/2004406-0a888aeb/128/Ex%20Hate%20Me%20-%20Bray_Masew.mp3',
-//   },
-//   {
-//     title: 'Ex Hate Me',
-//     artist: 'Bray; Masew',
-//     albumArtUrl: 'https://avatar-nct.nixcdn.com/song/2019/02/13/7/c/9/3/1550063179723.jpg',
-//     audioUrl:
-//       'https://data.chiasenhac.com/downloads/2005/1/2004406-0a888aeb/128/Ex%20Hate%20Me%20-%20Bray_Masew.mp3',
-//   },
-// ];
-
 const SEARCH_RESULT = [];
 
 const placeHolderText = 'Search';
@@ -178,8 +153,6 @@ class SearchPage extends Component {
       keySearch,
     } = this.state;
     const { playingTrack, paused, duration, currentTime } = this.props;
-    console.log('<><><><<>><><<><');
-    console.log(searchResults);
     return (
       <View style={styles.container}>
         <View style={styles.searchSpace}>
@@ -200,6 +173,15 @@ class SearchPage extends Component {
                 onItemPressed={track => {
                   this.updatePlayingTrack(track);
                   this.navigateToPlayer();
+                  this.setState(prevState => {
+                    return {
+                      recentSearches: [track, ...prevState.recentSearches],
+                      showResult: false,
+                      keySearch: '',
+                      text: 'Search',
+                      showPlaceHolder: true,
+                    };
+                  });
                 }}
                 keySearch={keySearch}
               />
@@ -257,7 +239,7 @@ const RecentSearchList = ({ data, onRemoveItem, onItemPressed }) => {
 export const SearchResult = ({ data, keySearch, onItemPressed, showEmptyMessage = true }) => {
   console.log(data);
   return data.length > 0 && showEmptyMessage ? (
-    <View style={{ flex: 1, marginTop: 30 }}>
+    <View style={{ flex: 1 }}>
       <LinearGradient colors={['#2b3535', '#121212']} style={{ width: '100%', height: '100%' }} />
       <FlatList
         style={{ position: 'absolute', width: '100%', height: '100%', top: 30 }}
