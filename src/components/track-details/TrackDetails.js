@@ -1,4 +1,5 @@
 import React from 'react';
+import TextTicker from 'react-native-text-ticker';
 
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
@@ -8,21 +9,33 @@ const TrackDetails = ({
   title,
   artist,
   onHeartPress,
-  liked = false,
+  heartEnabled = false,
 }) => {
+  const textLength = title.length + artist.length;
+  const speedPerChar = 145;
   return (
     <View style={styles.container}>
       <View style={styles.detailsWrapper}>
-        <Text style={styles.title} onPress={onTitlePress}>
+        {/* <Text style={styles.title} onPress={onTitlePress}>
           {title}
-        </Text>
+        </Text> */}
+        <TextTicker
+          style={styles.title}
+          duration={textLength * speedPerChar}
+          animationType="scroll"
+          loop
+          repeatSpacer={100}
+          marqueeDelay={500}
+        >
+          {title}
+        </TextTicker>
         <Text style={styles.artist} onPress={onArtistPress}>
           {artist}
         </Text>
       </View>
-      <View>
+      <View style={{ flex: 0.2, alignItems: 'flex-end' }}>
         <TouchableOpacity onPress={onHeartPress}>
-          {!liked ? (
+          {!heartEnabled ? (
             <Image style={styles.heartImage} source={require('../../images/ic-heart-empty.png')} />
           ) : (
             <Image style={styles.heartImage} source={require('../../images/ic-heart-color.png')} />
@@ -37,6 +50,7 @@ export default TrackDetails;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     marginTop: 20,
     flexDirection: 'row',
     height: 60,
@@ -46,6 +60,7 @@ const styles = StyleSheet.create({
   },
   detailsWrapper: {
     marginTop: 5,
+    flex: 0.8,
   },
   title: {
     fontSize: 26,

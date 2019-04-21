@@ -182,7 +182,7 @@ class SearchPage extends Component {
             style={showPlaceHolder ? styles.placeHolder : styles.textInput}
             onBlur={this.onBlurInput}
             onFocus={this.onFocusInput}
-            onChangeText={value => this.setState({ text: `          ${value.trim()}` })}
+            onChangeText={value => this.setState({ text: `${value}` })}
             onSubmitEditing={value => this.onSubmitEditing(value.nativeEvent.text.trim())}
           />
 
@@ -191,7 +191,10 @@ class SearchPage extends Component {
             {showResult ? (
               <SearchResult
                 data={searchResults}
-                onItemPressed={this.updatePlayingTrack}
+                onItemPressed={track => {
+                  this.updatePlayingTrack(track);
+                  this.navigateToPlayer();
+                }}
                 keySearch={keySearch}
               />
             ) : recentSearches.length !== 0 ? (
@@ -244,9 +247,10 @@ const RecentSearchList = ({ data, onRemoveItem, onItemPressed }) => {
   );
 };
 
-const SearchResult = ({ data, keySearch, onItemPressed }) => {
-  return data.length > 0 ? (
-    <View style={{ flex: 1 }}>
+// Compare to RecentSearchList, this has gradient color
+export const SearchResult = ({ data, keySearch, onItemPressed, showEmptyMessage = true }) => {
+  return data.length > 0 && showEmptyMessage ? (
+    <View style={{ flex: 1, marginTop: 30 }}>
       <LinearGradient colors={['#2b3535', '#121212']} style={{ width: '100%', height: '100%' }} />
       <FlatList
         style={{ position: 'absolute', width: '100%', height: '100%', top: 30 }}
@@ -280,7 +284,8 @@ const ClearText = ({ onPress }) => {
   );
 };
 
-const Item = ({ data, onPressedRemove, onPress, enableRemove = true }) => {
+export const Item = ({ data, onPressedRemove, onPress, enableRemove = true, imageStyle }) => {
+  const imgStyle = imageStyle !== undefined ? imageStyle : styles.image;
   return (
     <TouchableOpacity onPress={onPress}>
       <View
@@ -293,7 +298,7 @@ const Item = ({ data, onPressedRemove, onPress, enableRemove = true }) => {
         }}
       >
         <View style={{ flex: 0.2 }}>
-          <Image style={styles.image} source={{ uri: data.albumArtUrl }} />
+          <Image style={imgStyle} source={{ uri: data.albumArtUrl }} />
         </View>
         <View style={{ flex: 0.75, justifyContent: 'center' }}>
           <Text style={styles.titleText}>{data.title}</Text>
@@ -380,6 +385,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'normal',
+    paddingLeft: 15,
   },
   placeHolder: {
     backgroundColor: 'rgb(66, 67, 69)',

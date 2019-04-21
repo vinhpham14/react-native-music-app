@@ -19,22 +19,48 @@ class HomePage extends Component {
       listOfSubjectInfo,
       paused,
     };
+
+    console.log('cons');
   }
 
-  // static getDerivedStateFromProps(nextProps, prevState) {
-  //   // console.log('getDerivedStateFromProps of homepage:');
-  //   // console.log(nextProps.isPlaying);
-  //   // if (nextProps.isPlaying !== prevState.isPlaying) return { isPlaying: nextProps.isPlaying };
-  //   // return {};
-  // }
+  componentDidMount() {
+    const subjects = [];
+    const { dispatch } = this.props;
+    fetch('http://192.168.1.165:3000/api/recommends')
+      .then(res => res.json())
+      .then(json => {
+        json.forEach(data => {
+          const obj = {};
+          obj.subject = data.title;
+          obj.description = data.description;
+          obj.playlists = data.playlists;
+          subjects.push(obj);
+        });
+        dispatch(actionCreators.setListOfSubjectInfo(subjects));
+      });
+  }
 
   onPressedPlaylist = item => {
     const { dispatch, navigation } = this.props;
+    const obj = {};
 
-    dispatch(actionCreators.setPlayingPlaylist(item));
-    dispatch(actionCreators.setCurrentSongTime(0));
-    dispatch(actionCreators.setPlayingTrack(item.tracks[0]));
-    navigation.navigate('Player');
+    fetch(`http://192.168.1.165:3000/api/playlists/${item._id}`)
+      .then(res => res.json())
+      .then(data => {
+        obj.name = data.title;
+        obj.tracks = data.songs;
+        obj.playlistArtUrl = data.playlistArtUrl;
+
+        dispatch(actionCreators.setPlayingPlaylist(obj));
+        dispatch(actionCreators.setCurrentSongTime(0));
+        dispatch(actionCreators.setPlayingTrack(obj.tracks[0]));
+        navigation.navigate('Player');
+      });
+
+    // dispatch(actionCreators.setPlayingPlaylist(obj));
+    // dispatch(actionCreators.setCurrentSongTime(0));
+    // dispatch(actionCreators.setPlayingTrack(obj.tracks[0]));
+    // navigation.navigate('Player');
   };
 
   togglePlayingState = () => {

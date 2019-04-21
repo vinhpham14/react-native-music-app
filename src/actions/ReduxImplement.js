@@ -8,6 +8,8 @@ export const types = {
   SET_LIST_OF_SUBJECT_INFO: 'SET_LIST_OF_SUBJECT_INFO',
   SET_PAUSED: 'SET_PAUSED',
   SET_DURATION: 'SET_DURATION',
+  ADD_FAVORITE_TRACKS: 'ADD_FAVORITE_TRACKS',
+  REMOVE_FAVORITE_TRACKS: 'REMOVE_FAVORITE_TRACKS',
 };
 
 // Helper functions to dispatch actions, optionally with payloads
@@ -33,6 +35,12 @@ export const actionCreators = {
   setDuration: duration => {
     return { type: types.SET_DURATION, payload: duration };
   },
+  addFavoriteTrack: track => {
+    return { type: types.ADD_FAVORITE_TRACKS, payload: track };
+  },
+  removeFavoriteTrack: track => {
+    return { type: types.REMOVE_FAVORITE_TRACKS, payload: track };
+  },
 };
 
 // Initial state of the store
@@ -47,11 +55,13 @@ const initialState = {
   listOfSubjectInfo: LIST_SUBJECT_INFO,
   paused: true,
   duration: 1,
+  favoriteTracks: [1, 2, '222'],
 };
 
 // Function to handle actions and update the state of the store.
 export const reducer = (state = initialState, action) => {
   const { type, payload } = action;
+  const { favoriteTracks } = state;
 
   switch (type) {
     case types.SET_CURRENT_SCREEN: {
@@ -94,6 +104,20 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         duration: payload,
+      };
+    }
+    case types.ADD_FAVORITE_TRACKS: {
+      if (favoriteTracks.indexOf(payload) !== -1) return {};
+
+      return {
+        ...state,
+        favoriteTracks: [payload, ...favoriteTracks],
+      };
+    }
+    case types.REMOVE_FAVORITE_TRACKS: {
+      return {
+        ...state,
+        favoriteTracks: favoriteTracks.filter((track, i) => track !== payload),
       };
     }
     default: {

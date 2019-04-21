@@ -8,6 +8,7 @@ export const iconNames = {
   PlayMusic: 'play-music-button',
   PauseMusic: 'pause',
   SearchTabButton: 'search-button',
+  Library: 'library',
 };
 
 const IconGenerator = ({ iconName, size, onFocused = 1 }) => {
@@ -32,6 +33,9 @@ const IconGenerator = ({ iconName, size, onFocused = 1 }) => {
       break;
     case iconNames.SearchTabButton:
       src = require('../../images/ic-search.png');
+      break;
+    case iconNames.Library:
+      src = require('../../images/ic-user.png');
       break;
     default:
       console.log(`Error to get the image src of icon ${iconName.toString()}`);

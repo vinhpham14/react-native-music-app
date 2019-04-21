@@ -15,7 +15,7 @@ import { actionCreators } from '../actions/ReduxImplement';
 class PlayerPage extends Component {
   constructor(props) {
     super(props);
-    const { playlist } = this.props;
+    const { playlist, playingTrack } = this.props;
 
     this.state = {
       duration: 1,
@@ -24,19 +24,36 @@ class PlayerPage extends Component {
       shuffleOn: false,
       isChanging: false,
       showPlaylist: false,
+      heartEnabled: false,
       playlist,
+      playingTrack,
     };
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    let state = {};
     if (nextProps.playlist !== prevState.playlist) {
-      return {
-        ...nextProps,
+      state = {
+        ...state,
         selectedTrack: 0,
       };
     }
+    if (nextProps.playingTrack !== prevState.playingTrack) {
+      let heartEnabled = false;
 
-    return null;
+      if (nextProps.favoriteTracks.indexOf(nextProps.playingTrack) !== -1) {
+        heartEnabled = true;
+        console.log(heartEnabled);
+      }
+
+      state = {
+        ...state,
+        playingTrack: nextProps.playingTrack,
+        heartEnabled,
+      };
+    }
+
+    return { ...nextProps, ...state };
   }
 
   setDuration = data => {
@@ -157,9 +174,25 @@ class PlayerPage extends Component {
     dispatch(actionCreators.setPlayingTrack(payload));
   };
 
+  onHeartPressed = payload => {
+    const { dispatch } = this.props;
+    const { heartEnabled } = this.state;
+    if (heartEnabled) {
+      dispatch(actionCreators.removeFavoriteTrack(payload));
+    } else {
+      dispatch(actionCreators.addFavoriteTrack(payload));
+    }
+
+    this.setState(prevState => {
+      return {
+        heartEnabled: !prevState.heartEnabled,
+      };
+    });
+  };
+
   render() {
     const { playlist, currentTime, paused, duration, playingTrack } = this.props;
-    const { selectedTrack, isChanging, repeatOn, shuffleOn } = this.state;
+    const { selectedTrack, isChanging, repeatOn, shuffleOn, heartEnabled } = this.state;
 
     const video = isChanging ? null : (
       <Video
@@ -194,7 +227,14 @@ class PlayerPage extends Component {
             onPlaylistPress={() => this.setState({ showPlaylist: true })}
           />
           <AlbumArt url={playingTrack.albumArtUrl} />
-          <TrackDetails title={playingTrack.title} artist={playingTrack.artist} />
+          <TrackDetails
+            title={playingTrack.title}
+            artist={playingTrack.artist}
+            onHeartPress={() => {
+              this.onHeartPressed(playingTrack);
+            }}
+            heartEnabled={heartEnabled}
+          />
           <SeekBar
             onSliding={this.onSliding}
             duration={duration}
@@ -259,6 +299,8 @@ const styles = {
   },
 };
 
-export default connect(({ playlist, paused, currentTime, duration, playingTrack }) => {
-  return { playlist, paused, currentTime, duration, playingTrack };
-})(PlayerPage);
+export default connect(
+  ({ playlist, paused, currentTime, duration, playingTrack, favoriteTracks }) => {
+    return { playlist, paused, currentTime, duration, playingTrack, favoriteTracks };
+  }
+)(PlayerPage);

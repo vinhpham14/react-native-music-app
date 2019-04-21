@@ -16,6 +16,7 @@
     "no-console": "off",
     "global-require": "off",
     "react/no-unused-state": "off",
+    "no-unused-vars": "off",
     "react/jsx-filename-extension": [
       1,
       {
