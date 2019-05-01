@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { actionCreators } from '../actions/ReduxImplement';
 import MiniPlayer from '../components/mini-player/MiniPlayer';
 import SubjectList from '../components/subject-list/SubjectList';
+import { port } from '../constant';
 
 class HomePage extends Component {
   constructor(props) {
@@ -26,9 +27,11 @@ class HomePage extends Component {
   componentDidMount() {
     const subjects = [];
     const { dispatch } = this.props;
-    fetch('http://192.168.1.165:3000/api/recommends')
+    fetch(`${port}recommends`)
       .then(res => res.json())
       .then(json => {
+        console.log('From compo Did mount');
+        console.log(json);
         json.forEach(data => {
           const obj = {};
           obj.subject = data.title;
@@ -44,7 +47,7 @@ class HomePage extends Component {
     const { dispatch, navigation } = this.props;
     const obj = {};
 
-    fetch(`http://192.168.1.165:3000/api/playlists/${item._id}`)
+    fetch(`${port}playlists/${item._id}`)
       .then(res => res.json())
       .then(data => {
         obj.name = data.title;

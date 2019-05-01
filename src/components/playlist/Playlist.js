@@ -22,7 +22,7 @@ export default class Playlist extends Component {
   }
 
   render() {
-    const { playlist, onTrackPressed, playingTrack } = this.props;
+    const { playlist, onTrackPressed, playingTrack, onPlayPressed } = this.props;
 
     return (
       <View>
@@ -33,7 +33,7 @@ export default class Playlist extends Component {
             <Image style={styles.playlistArt} source={{ uri: playlist.playlistArtUrl }} />
             <Text style={styles.playlistTitle}>{playlist.name}</Text>
             <Text style={styles.playlistSubtitle}>{`${playlist.tracks.length} SONGS`}</Text>
-            <TouchableOpacity style={styles.playlistButton}>
+            <TouchableOpacity style={styles.playlistButton} onPress={onPlayPressed}>
               <Text style={styles.playlistButtonText}>SHUFFLE PLAY</Text>
             </TouchableOpacity>
           </View>

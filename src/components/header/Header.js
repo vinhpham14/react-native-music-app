@@ -3,16 +3,6 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 export default class Header extends Component {
-  onDownPress = () => {
-    // Inside proceeding
-    this.setMessage();
-
-    // Invoke the callback
-    if (typeof this.props.onDownPress === 'function') {
-      this.props.onDownPress();
-    }
-  };
-
   onPlaylistPress = () => {
     // Inside proceeding
 
@@ -32,9 +22,10 @@ export default class Header extends Component {
   };
 
   render() {
+    const { onDownPress } = this.props;
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={this.onDownPress}>
+        <TouchableOpacity onPress={onDownPress}>
           <Image
             style={styles.button}
             source={require('../../images/ic_keyboard_arrow_down_white.png')}

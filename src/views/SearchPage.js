@@ -16,6 +16,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import { actionCreators } from '../actions/ReduxImplement';
 import MiniPlayer from '../components/mini-player/MiniPlayer';
+import { port } from '../constant';
 
 const TRACKS_2 = [
   {
@@ -130,8 +131,7 @@ class SearchPage extends Component {
 
   onSubmitEditing = text => {
     // TO-DO: Get list of results matches with input
-    console.log(text);
-    fetch(`http://192.168.1.165:3000/api/search/${text}`)
+    fetch(`${port}search/${text}`)
       .then(res => res.json())
       .then(json => {
         console.log(json);
@@ -191,7 +191,11 @@ class SearchPage extends Component {
                 <RecentSearchList
                   onRemoveItem={this.removeFromRecentSearches}
                   data={recentSearches}
-                  onItemPressed={this.updatePlayingTrack}
+                  onItemPressed={track => {
+                    this.updatePlayingTrack(track);
+                    const { navigation } = this.props;
+                    navigation.navigate('Player');
+                  }}
                 />
                 <ClearText onPress={this.clearAllRecentSearches} />
               </ScrollView>
@@ -246,7 +250,13 @@ export const SearchResult = ({ data, keySearch, onItemPressed, showEmptyMessage 
         data={data}
         keyExtractor={(item, index) => index.toString()}
         renderItem={obj => (
-          <Item data={obj.item} onPress={() => onItemPressed(obj.item)} enableRemove={false} />
+          <Item
+            data={obj.item}
+            onPress={() => {
+              onItemPressed(obj.item);
+            }}
+            enableRemove={false}
+          />
         )}
       />
     </View>

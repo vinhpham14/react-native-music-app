@@ -52,10 +52,10 @@ const initialState = {
   playlist: PLAYLIST,
   screen: 'home',
   currentTime: 0,
-  listOfSubjectInfo: LIST_SUBJECT_INFO,
+  listOfSubjectInfo: [],
   paused: true,
   duration: 1,
-  favoriteTracks: [1, 2, '222'],
+  favoriteTracks: [],
 };
 
 // Function to handle actions and update the state of the store.

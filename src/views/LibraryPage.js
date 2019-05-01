@@ -30,7 +30,6 @@ class LibraryPage extends Component {
   };
 
   navigateToPlayer = () => {
-    console.log('AAAAAAAAAA>>>>><<><><><><<');
     const { navigation } = this.props;
     navigation.navigate('Player');
   };
@@ -42,6 +41,7 @@ class LibraryPage extends Component {
 
   render() {
     const { favoriteTracks, playingTrack, paused, duration, currentTime } = this.props;
+    console.log(favoriteTracks.length);
     return (
       <View style={{ flex: 1, backgroundColor: 'rgb(18,18,18)' }}>
         <View

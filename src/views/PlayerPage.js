@@ -225,6 +225,10 @@ class PlayerPage extends Component {
           <Header
             message="PLAYING FROM CHARTS"
             onPlaylistPress={() => this.setState({ showPlaylist: true })}
+            onDownPress={() => {
+              const { navigation } = this.props;
+              navigation.navigate('Home');
+            }}
           />
           <AlbumArt url={playingTrack.albumArtUrl} />
           <TrackDetails
@@ -268,6 +272,21 @@ class PlayerPage extends Component {
           this.setState({ showPlaylist: false });
         }}
         playingTrack={playingTrack}
+        onPlayPressed={() => {
+          const { navigation } = this.props;
+          const nextTrack = Math.floor(Math.random() * playlist.tracks.length);
+          setTimeout(() => {
+            this.updateCurrentTime(0);
+            this.updatePlayingTrack(playlist.tracks[nextTrack]);
+            this.updateDuration(1);
+            this.updatePaused(false);
+            this.setState({
+              isChanging: false,
+              selectedTrack: nextTrack,
+              showPlaylist: false,
+            });
+          }, 0);
+        }}
       />
     );
 
