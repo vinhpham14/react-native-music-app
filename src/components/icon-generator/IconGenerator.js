@@ -9,6 +9,9 @@ export const iconNames = {
   PauseMusic: 'pause',
   SearchTabButton: 'search-button',
   Library: 'library',
+  Playlists: 'playlists',
+  Songs: 'fav-songs',
+  RemoveButton: 'remove-button',
 };
 
 const IconGenerator = ({ iconName, size, onFocused = 1 }) => {
@@ -36,6 +39,15 @@ const IconGenerator = ({ iconName, size, onFocused = 1 }) => {
       break;
     case iconNames.Library:
       src = require('../../images/ic-user.png');
+      break;
+    case iconNames.Playlists:
+      src = require('../../images/ic-playlists.png');
+      break;
+    case iconNames.Songs:
+      src = require('../../images/ic-favorite-songs.png');
+      break;
+    case iconNames.RemoveButton:
+      src = require('../../images/ic-remove.png');
       break;
     default:
       console.log(`Error to get the image src of icon ${iconName.toString()}`);

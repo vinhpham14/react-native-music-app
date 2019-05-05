@@ -1,4 +1,4 @@
-import { PLAYLIST, SUBJECT_INFO, LIST_SUBJECT_INFO, TRACKS } from '../fake-data';
+import { PLAYLIST, SUBJECT_INFO, LIST_SUBJECT_INFO } from '../fake-data';
 
 export const types = {
   SET_PLAYING_PLAYLIST: 'SET_PLAYING_PLAYLIST',
@@ -10,6 +10,13 @@ export const types = {
   SET_DURATION: 'SET_DURATION',
   ADD_FAVORITE_TRACKS: 'ADD_FAVORITE_TRACKS',
   REMOVE_FAVORITE_TRACKS: 'REMOVE_FAVORITE_TRACKS',
+  ADD_RECENTLY_PLAYED: 'ADD_RECENTLY_PLAYED',
+  REMOVE_RECENTLY_PLAYED: 'REMOVE_RECENTLY_PLAYED',
+  ADD_USER_PLAYLISTS: 'ADD_USER_PLAYLISTS',
+  REMOVE_USER_PLAYLISTS: 'REMOVE_USER_PLAYLISTS',
+  ADD_TRACK_TO_PLAYLIST: 'ADD_TRACK_TO_PLAYLIST',
+  SET_RECENT_SEARCHES: 'SET_RECENT_SEARCHES',
+  PURGE: 'PURGE',
 };
 
 // Helper functions to dispatch actions, optionally with payloads
@@ -41,6 +48,27 @@ export const actionCreators = {
   removeFavoriteTrack: track => {
     return { type: types.REMOVE_FAVORITE_TRACKS, payload: track };
   },
+  addRecentlyPlayed: item => {
+    return { type: types.ADD_RECENTLY_PLAYED, payload: item };
+  },
+  removeRecentlyPlayed: item => {
+    return { type: types.REMOVE_RECENTLY_PLAYED, payload: item };
+  },
+  addUserPlaylists: item => {
+    return { type: types.ADD_USER_PLAYLISTS, payload: item };
+  },
+  removeUserPlaylists: item => {
+    return { type: types.REMOVE_USER_PLAYLISTS, payload: item };
+  },
+  addTrackToPlaylist: (track, playlist) => {
+    return { type: types.ADD_TRACK_TO_PLAYLIST, payload: { track, playlist } };
+  },
+  setRecentSearches: list => {
+    return { type: types.SET_RECENT_SEARCHES, payload: list };
+  },
+  purge: () => {
+    return { type: types.PURGE };
+  },
 };
 
 // Initial state of the store
@@ -56,12 +84,15 @@ const initialState = {
   paused: true,
   duration: 1,
   favoriteTracks: [],
+  recentlyPlayedItems: [],
+  userPlaylists: [],
+  recentSearches: [],
 };
 
 // Function to handle actions and update the state of the store.
 export const reducer = (state = initialState, action) => {
   const { type, payload } = action;
-  const { favoriteTracks } = state;
+  const { favoriteTracks, recentlyPlayedItems, userPlaylists } = state;
 
   switch (type) {
     case types.SET_CURRENT_SCREEN: {
@@ -119,6 +150,51 @@ export const reducer = (state = initialState, action) => {
         ...state,
         favoriteTracks: favoriteTracks.filter((track, i) => track !== payload),
       };
+    }
+    case types.ADD_RECENTLY_PLAYED: {
+      return {
+        ...state,
+
+        // Get 15 recently played: playlist or song.
+        recentlyPlayedItems: [payload, ...recentlyPlayedItems].slice(0, 14),
+      };
+    }
+    case types.REMOVE_RECENTLY_PLAYED: {
+      return {
+        ...state,
+        recentlyPlayedItems: recentlyPlayedItems.filter((track, i) => track !== payload),
+      };
+    }
+    case types.ADD_USER_PLAYLISTS: {
+      return {
+        ...state,
+
+        // Get 15 recently played: playlist or song.
+        userPlaylists: [payload, ...userPlaylists],
+      };
+    }
+    case types.REMOVE_USER_PLAYLISTS: {
+      return {
+        ...state,
+        userPlaylists: userPlaylists.filter((track, i) => track !== payload),
+      };
+    }
+    case types.ADD_TRACK_TO_PLAYLIST: {
+      const index = userPlaylists.indexOf(payload.playlist);
+      userPlaylists[index].push(payload.track);
+      return {
+        ...state,
+        userPlaylists,
+      };
+    }
+    case types.SET_RECENT_SEARCHES: {
+      return {
+        ...state,
+        recentSearches: payload,
+      };
+    }
+    case types.PURGE: {
+      return {};
     }
     default: {
       return state;

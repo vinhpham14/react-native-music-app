@@ -18,34 +18,17 @@ import { actionCreators } from '../actions/ReduxImplement';
 import MiniPlayer from '../components/mini-player/MiniPlayer';
 import { port } from '../constant';
 
-const TRACKS_2 = [
-  {
-    title: 'Chia Tay',
-    artist: 'Bùi Anh Tuấn',
-    albumArtUrl:
-      'https://photo-resize-zmp3.zadn.vn/w240h240_jpeg/cover/3/4/8/9/3489afd794b9fd47cfa972aa7271e13e.jpg',
-    audioUrl:
-      'https://vnso-zn-15-tf-mp3-s1-zmp3.zadn.vn/d6ade15e3a1ad3448a0b/3067141731979981036?authen=exp=1555817777~acl=/d6ade15e3a1ad3448a0b/*~hmac=b7a4798f618ced153050dbf05059ad04&filename=Chia-Tay-Original-Version-By-Hai-Au-Bui-Anh-Tuan.mp3',
-  },
-  {
-    title: 'Ex Hate Me',
-    artist: 'Bray; Masew',
-    albumArtUrl: 'https://avatar-nct.nixcdn.com/song/2019/02/13/7/c/9/3/1550063179723.jpg',
-    audioUrl:
-      'https://data.chiasenhac.com/downloads/2005/1/2004406-0a888aeb/128/Ex%20Hate%20Me%20-%20Bray_Masew.mp3',
-  },
-];
-
 const SEARCH_RESULT = [];
 
 const placeHolderText = 'Search';
 class SearchPage extends Component {
   constructor(props) {
     super(props);
+    const { recentSearches } = this.props;
     this.state = {
       text: placeHolderText,
       showPlaceHolder: true,
-      recentSearches: TRACKS_2,
+      recentSearches,
       showResult: false,
       searchResults: [],
       keySearch: '',
@@ -112,10 +95,13 @@ class SearchPage extends Component {
 
   removeFromRecentSearches = index => {
     const { recentSearches } = this.state;
+    const { dispatch } = this.props;
+    const newRecentSearches = recentSearches.filter((search, i) => i !== index);
 
     this.setState({
-      recentSearches: recentSearches.filter((search, i) => i !== index),
+      recentSearches: newRecentSearches,
     });
+    dispatch(actionCreators.setRecentSearches(newRecentSearches));
   };
 
   clearAllRecentSearches = () => {
@@ -134,7 +120,6 @@ class SearchPage extends Component {
     fetch(`${port}search/${text}`)
       .then(res => res.json())
       .then(json => {
-        console.log(json);
         this.setState({
           searchResults: json,
           showResult: true,
@@ -171,22 +156,41 @@ class SearchPage extends Component {
               <SearchResult
                 data={searchResults}
                 onItemPressed={track => {
-                  this.updatePlayingTrack(track);
-                  this.navigateToPlayer();
-                  this.setState(prevState => {
-                    return {
-                      recentSearches: [track, ...prevState.recentSearches],
-                      showResult: false,
-                      keySearch: '',
-                      text: 'Search',
-                      showPlaceHolder: true,
-                    };
+                  const { dispatch } = this.props;
+                  const newRecentSearches = [track, ...recentSearches];
+
+                  this.setState({
+                    recentSearches: newRecentSearches,
+                    showResult: false,
+                    keySearch: '',
+                    text: 'Search',
+                    showPlaceHolder: true,
                   });
+
+                  this.updatePlayingTrack(track);
+                  dispatch(
+                    actionCreators.addRecentlyPlayed({
+                      type: 'song',
+                      data: track,
+                    })
+                  );
+
+                  // Keep track the recently played
+                  dispatch(
+                    actionCreators.addFavoriteTrack({
+                      type: 'song',
+                      data: track,
+                    })
+                  );
+
+                  dispatch(actionCreators.setRecentSearches(newRecentSearches));
+
+                  this.navigateToPlayer();
                 }}
                 keySearch={keySearch}
               />
             ) : recentSearches.length !== 0 ? (
-              <ScrollView style={{ height: 400 }} showsHorizontalScrollIndicator={false}>
+              <ScrollView showsHorizontalScrollIndicator={false}>
                 <Text style={styles.categoryText}> Recent Searches</Text>
                 <RecentSearchList
                   onRemoveItem={this.removeFromRecentSearches}
@@ -194,7 +198,7 @@ class SearchPage extends Component {
                   onItemPressed={track => {
                     this.updatePlayingTrack(track);
                     const { navigation } = this.props;
-                    navigation.navigate('Player');
+                    // navigation.navigate('Player');
                   }}
                 />
                 <ClearText onPress={this.clearAllRecentSearches} />
@@ -241,7 +245,6 @@ const RecentSearchList = ({ data, onRemoveItem, onItemPressed }) => {
 
 // Compare to RecentSearchList, this has gradient color
 export const SearchResult = ({ data, keySearch, onItemPressed, showEmptyMessage = true }) => {
-  console.log(data);
   return data.length > 0 && showEmptyMessage ? (
     <View style={{ flex: 1 }}>
       <LinearGradient colors={['#2b3535', '#121212']} style={{ width: '100%', height: '100%' }} />
@@ -427,13 +430,16 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(({ playingTrack, playlist, screen, currentTime, duration, paused }) => {
-  return {
-    playingTrack,
-    playlist,
-    screen,
-    currentTime,
-    paused,
-    duration,
-  };
-})(SearchPage);
+export default connect(
+  ({ playingTrack, playlist, screen, currentTime, duration, paused, recentSearches }) => {
+    return {
+      playingTrack,
+      playlist,
+      screen,
+      currentTime,
+      paused,
+      duration,
+      recentSearches,
+    };
+  }
+)(SearchPage);

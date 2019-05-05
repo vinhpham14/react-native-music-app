@@ -1,19 +1,43 @@
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image, Dimensions } from 'react-native';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
+import {
+  createBottomTabNavigator,
+  createAppContainer,
+  createStackNavigator,
+} from 'react-navigation';
 
-import HomePage from './src/views/HomePage';
-import PlayerPage from './src/views/PlayerPage';
-import SearchPage from './src/views/SearchPage';
-import LibraryPage from './src/views/LibraryPage';
-import { reducer } from './src/actions/ReduxImplement';
+import { persistStore, persistReducer } from 'redux-persist';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+import { PersistGate } from 'redux-persist/lib/integration/react';
+import storage from 'redux-persist/lib/storage';
+import HomePage from './src/main-views/HomePage';
+import PlayerPage from './src/main-views/PlayerPage';
+import SearchPage from './src/main-views/SearchPage';
+import PlaylistManagerPage from './src/child-views/PlaylistManagerPage';
+import LibraryPage from './src/main-views/LibraryPage';
+import { reducer, actionCreators } from './src/actions/ReduxImplement';
 import IconGenerator, { iconNames } from './src/components/icon-generator/IconGenerator';
+import InputNamePage from './src/child-views/InputNamePage';
+
+// Redux persist
+// Thank to https://blog.reactnativecoach.com/the-definitive-guide-to-redux-persist-84738167975.
+const persistConfig = {
+  key: 'root',
+  storage,
+  stateReconciler: autoMergeLevel2,
+  timeout: null,
+};
+
+const pReducer = persistReducer(persistConfig, reducer);
+
+const store = createStore(pReducer);
+const persistor = persistStore(store);
 
 // Get all the data
 // Init global store
-const store = createStore(reducer);
+// const store = createStore(reducer);
 
 export default class App extends Component {
   // store = createStore(reducer);
@@ -21,8 +45,7 @@ export default class App extends Component {
   constructor(props) {
     super(props);
 
-    const { playingTrack, playlist, screen, currentTime, listOfSubjectInfo } = store.getState();
-
+    this.state = {};
     // this.state = {
     //   playingTrack,
     //   playlist,
@@ -36,8 +59,8 @@ export default class App extends Component {
     this.unsubscribe = store.subscribe(() => {
       // const { playingSong, playlist, screen, currentTime, listOfSubjectInfo } = store.getState();
       // this.setState({ playingSong, playlist, screen, currentTime, listOfSubjectInfo });
-      console.log('Store has been modified: ');
-      console.log(store.getState());
+      // console.log('Store has been modified: ');
+      // console.log(store.getState());
     });
   }
 
@@ -48,21 +71,65 @@ export default class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <AppContainer />
+        <PersistGate persistor={persistor}>
+          <AppContainer />
+        </PersistGate>
       </Provider>
     );
   }
 }
+
+const LibraryStack = createStackNavigator(
+  {
+    Library: LibraryPage,
+    PlaylistManager: PlaylistManagerPage,
+    InputName: InputNamePage,
+  },
+  {
+    initialRouteName: 'Library',
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: 'rgb(34,35,38)',
+      },
+      headerBackImage: (
+        <Image
+          source={require('./src/images/ic-back-arrow.png')}
+          style={{ width: 26, height: 26 }}
+        />
+      ),
+      headerTitleStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 17,
+        textAlign: 'center',
+        alignSelf: 'center',
+        flex: 1,
+      },
+    },
+    headerLayoutPreset: 'center',
+  }
+);
+
+LibraryStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index === 2) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+  };
+};
 
 const TabNavigator = createBottomTabNavigator(
   {
     Home: { screen: HomePage },
     Player: { screen: PlayerPage },
     Search: { screen: SearchPage },
-    Library: { screen: LibraryPage },
+    Library: { screen: LibraryStack },
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Library',
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused }) => getTabBarIcon(navigation, focused),
     }),

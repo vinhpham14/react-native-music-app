@@ -20,18 +20,16 @@ class HomePage extends Component {
       listOfSubjectInfo,
       paused,
     };
-
-    console.log('cons');
   }
 
   componentDidMount() {
     const subjects = [];
     const { dispatch } = this.props;
+    // dispatch(actionCreators.purge());
+
     fetch(`${port}recommends`)
       .then(res => res.json())
       .then(json => {
-        console.log('From compo Did mount');
-        console.log(json);
         json.forEach(data => {
           const obj = {};
           obj.subject = data.title;
@@ -45,25 +43,44 @@ class HomePage extends Component {
 
   onPressedPlaylist = item => {
     const { dispatch, navigation } = this.props;
-    const obj = {};
+    let playlist = {};
 
     fetch(`${port}playlists/${item._id}`)
       .then(res => res.json())
       .then(data => {
-        obj.name = data.title;
-        obj.tracks = data.songs;
-        obj.playlistArtUrl = data.playlistArtUrl;
+        playlist = {
+          name: data.title,
+          tracks: data.songs,
+          playlistArtUrl: data.playlistArtUrl,
+        };
 
-        dispatch(actionCreators.setPlayingPlaylist(obj));
+        dispatch(actionCreators.setPlayingPlaylist(playlist));
         dispatch(actionCreators.setCurrentSongTime(0));
-        dispatch(actionCreators.setPlayingTrack(obj.tracks[0]));
+        dispatch(actionCreators.setPlayingTrack(playlist.tracks[0]));
+        dispatch(
+          actionCreators.addRecentlyPlayed({
+            type: 'playlist',
+            data: playlist,
+          })
+        );
+
         navigation.navigate('Player');
       });
 
-    // dispatch(actionCreators.setPlayingPlaylist(obj));
-    // dispatch(actionCreators.setCurrentSongTime(0));
-    // dispatch(actionCreators.setPlayingTrack(obj.tracks[0]));
-    // navigation.navigate('Player');
+    // Add to recent play
+    // console.log('Plalist on pressed: 1');
+    // console.log(playlist);
+    // (playlist.name);
+    // const recentItem = {
+    //   type: 'playlist',
+    //   data: {
+    //     name: playlist.name,
+    //     tracks: playlist.tracks,
+    //     playlistArtUrl: playlist.playlistArtUrl,
+    //   },
+    // };
+
+    // dispatch(actionCreators.addRecentlyPlayed(recentItem));
   };
 
   togglePlayingState = () => {
@@ -82,6 +99,7 @@ class HomePage extends Component {
 
   render() {
     const { listOfSubjectInfo, paused, playingTrack, duration, currentTime } = this.props;
+
     return (
       <View style={{ flex: 1 }}>
         <View style={styles.container}>
@@ -131,7 +149,7 @@ const styles = StyleSheet.create({
     flex: 0.905,
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    backgroundColor: 'blue',
+    backgroundColor: 'rgb(18,18,18)',
   },
   linearGradientEffect: {
     width: '100%',

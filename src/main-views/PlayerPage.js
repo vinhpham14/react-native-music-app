@@ -13,6 +13,10 @@ import Playlist from '../components/playlist/Playlist';
 import { actionCreators } from '../actions/ReduxImplement';
 
 class PlayerPage extends Component {
+  static navigationOptions = {
+    title: 'Player',
+  };
+
   constructor(props) {
     super(props);
     const { playlist, playingTrack } = this.props;
@@ -24,7 +28,6 @@ class PlayerPage extends Component {
       shuffleOn: false,
       isChanging: false,
       showPlaylist: false,
-      heartEnabled: false,
       playlist,
       playingTrack,
     };
@@ -43,7 +46,6 @@ class PlayerPage extends Component {
 
       if (nextProps.favoriteTracks.indexOf(nextProps.playingTrack) !== -1) {
         heartEnabled = true;
-        console.log(heartEnabled);
       }
 
       state = {
@@ -191,8 +193,26 @@ class PlayerPage extends Component {
   };
 
   render() {
-    const { playlist, currentTime, paused, duration, playingTrack } = this.props;
-    const { selectedTrack, isChanging, repeatOn, shuffleOn, heartEnabled } = this.state;
+    const {
+      playlist,
+      currentTime,
+      paused,
+      duration,
+      playingTrack,
+      favoriteTracks,
+      navigation,
+    } = this.props;
+    const { selectedTrack, isChanging, repeatOn, shuffleOn, showPlaylist } = this.state;
+
+    // Check to render the liked track.
+    let heartEnabled = false;
+    favoriteTracks.some(track => {
+      if (track._id === playingTrack._id) {
+        heartEnabled = true;
+        return true;
+      }
+      return false;
+    });
 
     const video = isChanging ? null : (
       <Video
@@ -290,8 +310,10 @@ class PlayerPage extends Component {
       />
     );
 
-    const { showPlaylist } = this.state;
-
+    // In case we need to navigate to playlist view.
+    // This is a dirty way to do this. Should use stack screens with tab navigation.
+    // Src: https://reactnavigation.org/docs/en/tab-based-navigation.html#a-stack-navigator-for-each-tab
+    const _showPlaylist = navigation.getParam('showPlaylist', showPlaylist);
     return (
       <View style={styles.container}>
         {showPlaylist ? playlistView : playerView}
