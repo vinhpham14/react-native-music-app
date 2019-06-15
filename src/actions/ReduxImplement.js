@@ -181,7 +181,10 @@ export const reducer = (state = initialState, action) => {
     }
     case types.ADD_TRACK_TO_PLAYLIST: {
       const index = userPlaylists.indexOf(payload.playlist);
-      userPlaylists[index].push(payload.track);
+      console.log(index);
+      console.log(userPlaylists[index]);
+      if (userPlaylists[index].tracks.indexOf(payload.track) < 0)
+        userPlaylists[index].tracks.push(payload.track);
       return {
         ...state,
         userPlaylists,

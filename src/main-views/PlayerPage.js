@@ -13,9 +13,7 @@ import Playlist from '../components/playlist/Playlist';
 import { actionCreators } from '../actions/ReduxImplement';
 
 class PlayerPage extends Component {
-  static navigationOptions = {
-    title: 'Player',
-  };
+  static navigationOptions = { header: null };
 
   constructor(props) {
     super(props);
@@ -94,6 +92,11 @@ class PlayerPage extends Component {
     );
   };
 
+  addSongToPlaylist = () => {
+    const { navigation } = this.props;
+    navigation.navigate('AddToPlaylist');
+  };
+
   onBack = () => {
     const { currentTime, playlist } = this.props;
     const { selectedTrack } = this.state;
@@ -101,16 +104,25 @@ class PlayerPage extends Component {
     if (currentTime < 10 && selectedTrack > 0) {
       this.videoPlayer !== undefined && this.videoPlayer.seek(0);
       this.setState({ isChanging: true });
-      setTimeout(() => {
-        this.updatePaused(true);
-        this.updateCurrentTime(0);
-        this.updateDuration(1);
-        this.updatePlayingTrack(playlist.tracks[selectedTrack - 1]);
-        this.setState({
-          isChanging: false,
-          selectedTrack: selectedTrack - 1,
-        });
-      }, 0);
+      // setTimeout(() => {
+      //   this.updatePaused(true);
+      //   this.updateCurrentTime(0);
+      //   this.updateDuration(1);
+      //   this.updatePlayingTrack(playlist.tracks[selectedTrack - 1]);
+      //   this.setState({
+      //     isChanging: false,
+      //     selectedTrack: selectedTrack - 1,
+      //   });
+      // }, 0);
+
+      this.updatePaused(true);
+      this.updateCurrentTime(0);
+      this.updateDuration(1);
+      this.updatePlayingTrack(playlist.tracks[selectedTrack - 1]);
+      this.setState({
+        isChanging: false,
+        selectedTrack: selectedTrack - 1,
+      });
     } else {
       this.updatePaused(true);
       this.updateCurrentTime(0);
@@ -134,16 +146,25 @@ class PlayerPage extends Component {
       const nextTrack = shuffleOn
         ? Math.floor(Math.random() * playlist.tracks.length)
         : selectedTrack + 1;
-      setTimeout(() => {
-        this.updatePaused(true);
-        this.updateCurrentTime(0);
-        this.updatePlayingTrack(playlist.tracks[nextTrack]);
-        this.updateDuration(1);
-        this.setState({
-          isChanging: false,
-          selectedTrack: nextTrack,
-        });
-      }, 0);
+      // setTimeout(() => {
+      //   this.updatePaused(true);
+      //   this.updateCurrentTime(0);
+      //   this.updatePlayingTrack(playlist.tracks[nextTrack]);
+      //   this.updateDuration(1);
+      //   this.setState({
+      //     isChanging: false,
+      //     selectedTrack: nextTrack,
+      //   });
+      // }, 0);
+
+      this.updatePaused(true);
+      this.updateCurrentTime(0);
+      this.updatePlayingTrack(playlist.tracks[nextTrack]);
+      this.updateDuration(1);
+      this.setState({
+        isChanging: false,
+        selectedTrack: nextTrack,
+      });
     }
   };
 
@@ -258,6 +279,7 @@ class PlayerPage extends Component {
               this.onHeartPressed(playingTrack);
             }}
             heartEnabled={heartEnabled}
+            onPlusPress={this.addSongToPlaylist}
           />
           <SeekBar
             onSliding={this.onSliding}
@@ -295,17 +317,27 @@ class PlayerPage extends Component {
         onPlayPressed={() => {
           const { navigation } = this.props;
           const nextTrack = Math.floor(Math.random() * playlist.tracks.length);
-          setTimeout(() => {
-            this.updateCurrentTime(0);
-            this.updatePlayingTrack(playlist.tracks[nextTrack]);
-            this.updateDuration(1);
-            this.updatePaused(false);
-            this.setState({
-              isChanging: false,
-              selectedTrack: nextTrack,
-              showPlaylist: false,
-            });
-          }, 0);
+          // setTimeout(() => {
+          //   this.updateCurrentTime(0);
+          //   this.updatePlayingTrack(playlist.tracks[nextTrack]);
+          //   this.updateDuration(1);
+          //   this.updatePaused(false);
+          //   this.setState({
+          //     isChanging: false,
+          //     selectedTrack: nextTrack,
+          //     showPlaylist: false,
+          //   });
+          // }, 0);
+
+          this.updateCurrentTime(0);
+          this.updatePlayingTrack(playlist.tracks[nextTrack]);
+          this.updateDuration(1);
+          this.updatePaused(false);
+          this.setState({
+            isChanging: false,
+            selectedTrack: nextTrack,
+            showPlaylist: false,
+          });
         }}
       />
     );

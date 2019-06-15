@@ -45,6 +45,9 @@ class HomePage extends Component {
     const { dispatch, navigation } = this.props;
     let playlist = {};
 
+    // console.log('Pressed');
+    // console.log(item._id);
+    // console.log(`${port}playlists/${item._id}`);
     fetch(`${port}playlists/${item._id}`)
       .then(res => res.json())
       .then(data => {
@@ -53,7 +56,6 @@ class HomePage extends Component {
           tracks: data.songs,
           playlistArtUrl: data.playlistArtUrl,
         };
-
         dispatch(actionCreators.setPlayingPlaylist(playlist));
         dispatch(actionCreators.setCurrentSongTime(0));
         dispatch(actionCreators.setPlayingTrack(playlist.tracks[0]));

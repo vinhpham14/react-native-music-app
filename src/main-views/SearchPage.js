@@ -113,6 +113,7 @@ class SearchPage extends Component {
   updatePlayingTrack = payload => {
     const { dispatch } = this.props;
     dispatch(actionCreators.setPlayingTrack(payload));
+    console.log('done update playing track');
   };
 
   onSubmitEditing = text => {
@@ -198,7 +199,7 @@ class SearchPage extends Component {
                   onItemPressed={track => {
                     this.updatePlayingTrack(track);
                     const { navigation } = this.props;
-                    // navigation.navigate('Player');
+                    navigation.navigate('Player');
                   }}
                 />
                 <ClearText onPress={this.clearAllRecentSearches} />
@@ -236,7 +237,10 @@ const RecentSearchList = ({ data, onRemoveItem, onItemPressed }) => {
         <Item
           data={obj.item}
           onPressedRemove={() => onRemoveItem(obj.index)}
-          onPress={() => onItemPressed(obj.item)}
+          onPress={() => {
+            console.log('Item Pressed in Recent List: ');
+            onItemPressed(obj.item);
+          }}
         />
       )}
     />

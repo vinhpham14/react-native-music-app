@@ -32,12 +32,12 @@ export default class AlbumArt extends Component {
 }
 
 const { width, height } = Dimensions.get('window');
-const imageSize = width - (26 / 100) * width;
+const imageSize = width - (16 / 100) * width;
 
 const styles = StyleSheet.create({
   container: {
-    paddingLeft: '13%',
-    paddingRight: '13%',
+    paddingLeft: '8%',
+    paddingRight: '8%',
   },
   image: {
     width: imageSize,

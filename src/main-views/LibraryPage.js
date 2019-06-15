@@ -64,10 +64,9 @@ class LibraryPage extends Component {
 
     if (label === 'Playlists') {
       navigation.navigate('PlaylistManager');
+    } else if (label === 'Favorite Songs') {
+      navigation.navigate('FavoriteSongs');
     }
-    // else (lable === 'Favorite Songs') {
-
-    // }
   };
 
   render() {
@@ -241,41 +240,41 @@ const CategoryItem = ({ onPress, item }) => {
   );
 };
 
-const HeaderPage = ({ text }) => {
-  return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: 'rgb(34, 35, 38)',
-      }}
-    >
-      <View style={{ flex: 0.1, alignContent: 'center', justifyContent: 'center' }}>
-        <TouchableOpacity>
-          <Image
-            source={require('../images/ic-back-arrow.png')}
-            style={{ width: 30, height: 30 }}
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={{ flex: 0.8 }}>
-        <Text
-          style={{
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: 18,
-            textAlign: 'center',
-          }}
-        >
-          {text}
-        </Text>
-      </View>
-      <View style={{ flex: 0.1 }} />
-    </View>
-  );
-};
+// const HeaderPage = ({ text }) => {
+//   return (
+//     <View
+//       style={{
+//         flex: 1,
+//         flexDirection: 'row',
+//         alignItems: 'center',
+//         justifyContent: 'space-between',
+//         backgroundColor: 'rgb(34, 35, 38)',
+//       }}
+//     >
+//       <View style={{ flex: 0.1, alignContent: 'center', justifyContent: 'center' }}>
+//         <TouchableOpacity>
+//           <Image
+//             source={require('../images/ic-back-arrow.png')}
+//             style={{ width: 30, height: 30 }}
+//           />
+//         </TouchableOpacity>
+//       </View>
+//       <View style={{ flex: 0.8 }}>
+//         <Text
+//           style={{
+//             color: 'white',
+//             fontWeight: 'bold',
+//             fontSize: 18,
+//             textAlign: 'center',
+//           }}
+//         >
+//           {text}
+//         </Text>
+//       </View>
+//       <View style={{ flex: 0.1 }} />
+//     </View>
+//   );
+// };
 
 const { width } = Dimensions.get('window');
 const imageSize = 0.14 * width;

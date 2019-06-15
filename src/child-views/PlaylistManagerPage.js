@@ -72,7 +72,21 @@ class PlaylistManagerPage extends Component {
           style={{ flex: 0.82 }}
           data={userPlaylists}
           renderItem={({ item }) => (
-            <Item item={item} onRemovePressed={() => this.onRemovePressed(item)} />
+            <Item
+              item={item}
+              onRemovePressed={() => this.onRemovePressed(item)}
+              onPressItem={() => {
+                const { dispatch, navigation } = this.props;
+                const playlist = { ...item };
+                if (playlist.tracks.length !== 0) {
+                  playlist.playlistArtUrl =
+                    'https://contentpl-a.akamaihd.net/images/genre_moods/image/medium/Compilation.jpg';
+                  dispatch(actionCreators.setPlayingPlaylist(playlist));
+                  dispatch(actionCreators.setPlayingTrack(playlist.tracks[0]));
+                  navigation.navigate('Player');
+                }
+              }}
+            />
           )}
           keyExtractor={(item, index) => index.toString()}
         />
@@ -81,7 +95,7 @@ class PlaylistManagerPage extends Component {
   }
 }
 
-const Item = ({ item, onRemovePressed }) => {
+const Item = ({ item, onRemovePressed, onPressItem }) => {
   return (
     <View
       style={{
@@ -108,11 +122,14 @@ const Item = ({ item, onRemovePressed }) => {
           justifyContent: 'space-around',
         }}
       >
-        <Text style={{ color: 'white', fontSize: 14, marginLeft: 10 }}>{item.name}</Text>
+        <Text onPress={onPressItem} style={{ color: 'white', fontSize: 14, marginLeft: 10 }}>
+          {item.name}
+        </Text>
         <Text style={{ color: 'rgb(179, 179, 179)', fontSize: 13, marginLeft: 10 }}>
           {`${item.tracks.length} songs`}
         </Text>
       </View>
+
       <View style={{ flex: 0.2, justifyContent: 'center', alignItems: 'center' }}>
         <TouchableOpacity onPress={onRemovePressed}>
           <IconGenerator iconName={iconNames.RemoveButton} size={17} />

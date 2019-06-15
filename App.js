@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Image, Dimensions } from 'react-native';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
+import hardSet from 'redux-persist/lib/stateReconciler/hardSet';
 import {
   createBottomTabNavigator,
   createAppContainer,
@@ -16,10 +17,12 @@ import HomePage from './src/main-views/HomePage';
 import PlayerPage from './src/main-views/PlayerPage';
 import SearchPage from './src/main-views/SearchPage';
 import PlaylistManagerPage from './src/child-views/PlaylistManagerPage';
+import AddToPlaylistPage from './src/child-views/AddToPlaylistPage';
 import LibraryPage from './src/main-views/LibraryPage';
 import { reducer, actionCreators } from './src/actions/ReduxImplement';
 import IconGenerator, { iconNames } from './src/components/icon-generator/IconGenerator';
 import InputNamePage from './src/child-views/InputNamePage';
+import FavoriteSongPage from './src/child-views/FavoriteSongPage';
 
 // Redux persist
 // Thank to https://blog.reactnativecoach.com/the-definitive-guide-to-redux-persist-84738167975.
@@ -28,6 +31,7 @@ const persistConfig = {
   storage,
   stateReconciler: autoMergeLevel2,
   timeout: null,
+  // stateReconciler: hardSet,
 };
 
 const pReducer = persistReducer(persistConfig, reducer);
@@ -59,8 +63,8 @@ export default class App extends Component {
     this.unsubscribe = store.subscribe(() => {
       // const { playingSong, playlist, screen, currentTime, listOfSubjectInfo } = store.getState();
       // this.setState({ playingSong, playlist, screen, currentTime, listOfSubjectInfo });
-      // console.log('Store has been modified: ');
-      // console.log(store.getState());
+      console.log('Store has been modified: ');
+      console.log(store.getState());
     });
   }
 
@@ -84,6 +88,7 @@ const LibraryStack = createStackNavigator(
     Library: LibraryPage,
     PlaylistManager: PlaylistManagerPage,
     InputName: InputNamePage,
+    FavoriteSongs: FavoriteSongPage,
   },
   {
     initialRouteName: 'Library',
@@ -121,15 +126,36 @@ LibraryStack.navigationOptions = ({ navigation }) => {
   };
 };
 
+const PlayerStack = createStackNavigator(
+  {
+    Player: PlayerPage,
+    AddToPlaylist: AddToPlaylistPage,
+  },
+  {
+    initialRouteName: 'Player',
+  }
+);
+
+PlayerStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index === 1) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+  };
+};
+
 const TabNavigator = createBottomTabNavigator(
   {
     Home: { screen: HomePage },
-    Player: { screen: PlayerPage },
+    Player: { screen: PlayerStack },
     Search: { screen: SearchPage },
     Library: { screen: LibraryStack },
   },
   {
-    initialRouteName: 'Library',
+    initialRouteName: 'Home',
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused }) => getTabBarIcon(navigation, focused),
     }),
