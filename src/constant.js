@@ -1,5 +1,4 @@
-// export const port = 'http://10.45.41.177:3000/api/';
-export const port = 'http://192.168.43.134:3000/api/';
+export const port = 'https://rnmusic.azurewebsites.net/api/';
 
 export const defaultPlaylistArtUrl =
   'https://lh3.googleusercontent.com/1V2aJF22NP29Qj48dh3_WlBxnS6Wqt97jdBAcWXXcmDx6p0pMICyIlmTvRoG7V6Uis-YoFIUta5Jm1sraqkS0RHuBvjPRNPQw6AGsvT_gaouYJDswUBGh67N50zFluGPbpS4rcb4lcObTt2Rr339MOURBnua-EN3BT5BIXTxLi7HjC8PzCB3FEug2aY3b7lk69RW4-aMhK_azfmogAZjEtM6IfulZsMQLCjDtEkNKsZ1Jo-RlRTq1_2_enzSI8G3G12zH_mDJso6pTmap7Ta6y2mCju2wStKm9F1mE7PAlDIn0QyimrUsKVcxR8d7crc00789LvSL4WNO-HrSBDmNPeMrcm7BXhkUaS5jT99UM-YQLmhEFOu2GjsdTW0viohkHjaG61koMToceuxWbiKd2OpBgRcJuK4WjTr_Ciq-_UHWlvojocrmGX-kDpAdkC__uzv7Tgbg2gw7K92cjEKKSDnfLDBgCN5d4dsjQwmiDXcnBSmfqxnkOOFc39oV0QHFiHD5lGGN117yAV0aDW1ec5oj93lLunMB3rmRGqsYelsd0nFg6DykiEtiKXGiOHAaH4PbG4drfRaAjLPkLohZ5TLhR4g2LJsggRz0zqSdf8v6AKGOuyLmKCHhiwd35Xl9zU8ug3gAVN2QnQbfag0B-TzokVVgNs=s512-no';

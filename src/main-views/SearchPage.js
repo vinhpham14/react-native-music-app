@@ -118,7 +118,7 @@ class SearchPage extends Component {
 
   onSubmitEditing = text => {
     // TO-DO: Get list of results matches with input
-    fetch(`${port}search/${text}`)
+    fetch(`${port}/songs/search/${text}`)
       .then(res => res.json())
       .then(json => {
         this.setState({
