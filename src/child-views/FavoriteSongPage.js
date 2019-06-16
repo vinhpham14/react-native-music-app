@@ -145,7 +145,6 @@ class FavoriteSongPage extends Component {
             }}
             data={favoriteTracks}
             onPressedRemove={item => {
-              console.log(item);
               dispatch(actionCreators.removeFavoriteTrack(item));
             }}
           />
@@ -194,8 +193,6 @@ const RecentlyPlayedList = ({ data, onItemPressed, onPressedRemove }) => {
 const RecentlyPlayedItem = ({ onPress, item, enableRemove, onPressedRemove }) => {
   const imgStyle = styles.imageSong;
   const data = item;
-
-  console.log(data);
 
   return (
     <TouchableOpacity onPress={onPress}>

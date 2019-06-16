@@ -50,7 +50,6 @@ const IconGenerator = ({ iconName, size, onFocused = 1 }) => {
       src = require('../../images/ic-remove.png');
       break;
     default:
-      console.log(`Error to get the image src of icon ${iconName.toString()}`);
       break;
   }
 

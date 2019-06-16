@@ -27,7 +27,7 @@ class HomePage extends Component {
     const { dispatch } = this.props;
     // dispatch(actionCreators.purge());
 
-    fetch(`${port}recommends`)
+    fetch(`${port}/recommends`)
       .then(res => res.json())
       .then(json => {
         json.forEach(data => {
@@ -38,17 +38,14 @@ class HomePage extends Component {
           subjects.push(obj);
         });
         dispatch(actionCreators.setListOfSubjectInfo(subjects));
+        console.log(subjects);
       });
   }
 
   onPressedPlaylist = item => {
     const { dispatch, navigation } = this.props;
     let playlist = {};
-
-    // console.log('Pressed');
-    // console.log(item._id);
-    // console.log(`${port}playlists/${item._id}`);
-    fetch(`${port}playlists/${item._id}`)
+    fetch(`${port}/playlists/${item._id}`)
       .then(res => res.json())
       .then(data => {
         playlist = {
