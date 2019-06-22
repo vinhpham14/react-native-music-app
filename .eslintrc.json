@@ -17,6 +17,7 @@
     "global-require": "off",
     "react/no-unused-state": "off",
     "no-unused-vars": "off",
+    "import/prefer-default-export": "off",
     "react/jsx-filename-extension": [
       1,
       {

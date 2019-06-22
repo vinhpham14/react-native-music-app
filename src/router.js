@@ -1,52 +1,21 @@
 import React, { Component } from 'react';
 import { StyleSheet, Image, Dimensions } from 'react-native';
-import { Provider } from 'react-redux';
 import {
   createBottomTabNavigator,
   createAppContainer,
   createStackNavigator,
 } from 'react-navigation';
 
-import { PersistGate } from 'redux-persist/lib/integration/react';
-import HomePage from './src/main-views/HomePage';
-import LoginPage from './src/main-views/LoginPage';
-import PlayerPage from './src/main-views/PlayerPage';
-import SearchPage from './src/main-views/SearchPage';
-import PlaylistManagerPage from './src/child-views/PlaylistManagerPage';
-import AddToPlaylistPage from './src/child-views/AddToPlaylistPage';
-import LibraryPage from './src/main-views/LibraryPage';
-import IconGenerator, { iconNames } from './src/components/icon-generator/IconGenerator';
-import InputNamePage from './src/child-views/InputNamePage';
-import FavoriteSongPage from './src/child-views/FavoriteSongPage';
-import { store, persistor } from './src/actions/redux-persist';
-
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  componentWillMount() {
-    this.unsubscribe = store.subscribe(() => {
-      console.log('Store has been modified: ');
-      console.log(store.getState());
-    });
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  render() {
-    return (
-      <Provider store={store}>
-        <PersistGate persistor={persistor}>
-          <AppContainer />
-        </PersistGate>
-      </Provider>
-    );
-  }
-}
+import HomePage from './main-views/HomePage';
+import LoginPage from './main-views/LoginPage';
+import PlayerPage from './main-views/PlayerPage';
+import SearchPage from './main-views/SearchPage';
+import PlaylistManagerPage from './child-views/PlaylistManagerPage';
+import AddToPlaylistPage from './child-views/AddToPlaylistPage';
+import LibraryPage from './main-views/LibraryPage';
+import IconGenerator, { iconNames } from './components/icon-generator/IconGenerator';
+import InputNamePage from './child-views/InputNamePage';
+import FavoriteSongPage from './child-views/FavoriteSongPage';
 
 const LibraryStack = createStackNavigator(
   {
@@ -62,10 +31,7 @@ const LibraryStack = createStackNavigator(
         backgroundColor: 'rgb(34,35,38)',
       },
       headerBackImage: (
-        <Image
-          source={require('./src/images/ic-back-arrow.png')}
-          style={{ width: 26, height: 26 }}
-        />
+        <Image source={require('./images/ic-back-arrow.png')} style={{ width: 26, height: 26 }} />
       ),
       headerTitleStyle: {
         color: 'white',
@@ -170,13 +136,13 @@ const getTabBarIcon = (navigation, focused) => {
   return <IconGenerator iconName={iconName} size={25} onFocused={focused} />;
 };
 
-const AppContainer = createAppContainer(TabNavigator);
+export const createContainer = () => createAppContainer(TabNavigator);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  nagivatior: {
-    backgroundColor: 'rgb(34,35,38)',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
+//   nagivatior: {
+//     backgroundColor: 'rgb(34,35,38)',
+//   },
+// });
