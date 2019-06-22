@@ -14,8 +14,6 @@ const MiniPlayer = ({
   currentTime,
   duration,
 }) => {
-  // const textLength = songName.length + artist.length;
-  // const speedPerChar = 145;
   const toggleIconPlayer = paused ? iconNames.PlayMusic : iconNames.PauseMusic;
 
   return (

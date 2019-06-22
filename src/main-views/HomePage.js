@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
-import { actionCreators } from '../actions/ReduxImplement';
+import { actionCreators } from '../actions/redux-persist';
 import MiniPlayer from '../components/mini-player/MiniPlayer';
 import SubjectList from '../components/subject-list/SubjectList';
 import { port } from '../constant';
@@ -10,7 +10,6 @@ import { port } from '../constant';
 class HomePage extends Component {
   constructor(props) {
     super(props);
-
     const { playingTrack, playlist, screen, currentTime, listOfSubjectInfo, paused } = this.props;
     this.state = {
       playingTrack,

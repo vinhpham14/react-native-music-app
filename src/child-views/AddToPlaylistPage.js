@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import { actionCreators } from '../actions/ReduxImplement';
+import { actionCreators } from '../actions/redux-persist';
 import { defaultPlaylistArtUrl } from '../constant';
 
 class AddToPlaylistPage extends Component {
@@ -34,7 +34,6 @@ class AddToPlaylistPage extends Component {
 
   render() {
     const { userPlaylists } = this.props;
-    console.log(userPlaylists);
     return (
       <View style={{ flex: 1 }}>
         <LinearGradient

@@ -10,7 +10,7 @@ import TrackDetails from '../components/track-details/TrackDetails';
 import SeekBar from '../components/seek-bar/SeekBar';
 import Controls from '../components/controls/Controls';
 import Playlist from '../components/playlist/Playlist';
-import { actionCreators } from '../actions/ReduxImplement';
+import { actionCreators } from '../actions/redux-persist';
 
 class PlayerPage extends Component {
   static navigationOptions = { header: null };
@@ -102,7 +102,7 @@ class PlayerPage extends Component {
     const { selectedTrack } = this.state;
 
     if (currentTime < 10 && selectedTrack > 0) {
-      this.videoPlayer !== undefined && this.videoPlayer.seek(0);
+      if (this.videoPlayer) this.videoPlayer.seek(0);
       this.setState({ isChanging: true });
       // setTimeout(() => {
       //   this.updatePaused(true);
@@ -139,7 +139,7 @@ class PlayerPage extends Component {
     const { selectedTrack, shuffleOn } = this.state;
     const { playlist } = this.props;
     if (selectedTrack < playlist.tracks.length - 1) {
-      this.videoPlayer !== undefined && this.videoPlayer.seek(0);
+      if (this.videoPlayer) this.videoPlayer.seek(0);
       this.setState({ isChanging: true });
 
       // Get the next tracks
@@ -171,7 +171,7 @@ class PlayerPage extends Component {
   onEnd = () => {
     const { repeatOn } = this.state;
     if (repeatOn === true) {
-      this.videoPlayer !== undefined && this.videoPlayer.seek(0);
+      if (this.videoPlayer) this.videoPlayer.seek(0);
     } else {
       this.onForward();
     }
@@ -267,7 +267,6 @@ class PlayerPage extends Component {
             message="PLAYING FROM CHARTS"
             onPlaylistPress={() => this.setState({ showPlaylist: true })}
             onDownPress={() => {
-              const { navigation } = this.props;
               navigation.navigate('Home');
             }}
           />
@@ -315,20 +314,7 @@ class PlayerPage extends Component {
         }}
         playingTrack={playingTrack}
         onPlayPressed={() => {
-          const { navigation } = this.props;
           const nextTrack = Math.floor(Math.random() * playlist.tracks.length);
-          // setTimeout(() => {
-          //   this.updateCurrentTime(0);
-          //   this.updatePlayingTrack(playlist.tracks[nextTrack]);
-          //   this.updateDuration(1);
-          //   this.updatePaused(false);
-          //   this.setState({
-          //     isChanging: false,
-          //     selectedTrack: nextTrack,
-          //     showPlaylist: false,
-          //   });
-          // }, 0);
-
           this.updateCurrentTime(0);
           this.updatePlayingTrack(playlist.tracks[nextTrack]);
           this.updateDuration(1);

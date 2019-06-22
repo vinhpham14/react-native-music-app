@@ -1,3 +1,7 @@
+import storage from 'redux-persist/lib/storage';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+import { persistStore, persistReducer } from 'redux-persist';
+import { createStore } from 'redux';
 import { PLAYLIST, SUBJECT_INFO, LIST_SUBJECT_INFO } from '../fake-data';
 
 export const types = {
@@ -181,8 +185,6 @@ export const reducer = (state = initialState, action) => {
     }
     case types.ADD_TRACK_TO_PLAYLIST: {
       const index = userPlaylists.indexOf(payload.playlist);
-      console.log(index);
-      console.log(userPlaylists[index]);
       if (userPlaylists[index].tracks.indexOf(payload.track) < 0)
         userPlaylists[index].tracks.push(payload.track);
       return {
@@ -204,3 +206,16 @@ export const reducer = (state = initialState, action) => {
     }
   }
 };
+
+// Implement redux persist
+// Thank to https://blog.reactnativecoach.com/the-definitive-guide-to-redux-persist-84738167975.
+const persistConfig = {
+  key: 'root',
+  storage,
+  stateReconciler: autoMergeLevel2,
+  timeout: null,
+};
+
+const pReducer = persistReducer(persistConfig, reducer);
+export const store = createStore(pReducer);
+export const persistor = persistStore(store);

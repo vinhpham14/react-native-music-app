@@ -2,47 +2,70 @@ import React, { Component } from 'react';
 
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
-export default class Header extends Component {
-  onPlaylistPress = () => {
-    // Inside proceeding
+const Header = ({ onDownPress, onMessagePress, onPlaylistPress, message }) => {
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity onPress={onDownPress}>
+        <Image
+          style={styles.button}
+          source={require('../../images/ic_keyboard_arrow_down_white.png')}
+        />
+      </TouchableOpacity>
 
-    // Invoke the callback
-    if (typeof this.props.onPlaylistPress === 'function') {
-      this.props.onPlaylistPress();
-    }
-  };
+      <Text onPress={onMessagePress} style={styles.message}>
+        {message.toUpperCase()}
+      </Text>
 
-  onMessagePress = () => {
-    // Inside proceeding
+      <TouchableOpacity onPress={onPlaylistPress}>
+        <Image style={styles.button} source={require('../../images/ic_queue_music_white.png')} />
+      </TouchableOpacity>
+    </View>
+  );
+};
 
-    // Invoke the callback
-    if (typeof this.props.onMessagePress === 'function') {
-      this.props.onMessagePress();
-    }
-  };
+export default Header;
 
-  render() {
-    const { onDownPress } = this.props;
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity onPress={onDownPress}>
-          <Image
-            style={styles.button}
-            source={require('../../images/ic_keyboard_arrow_down_white.png')}
-          />
-        </TouchableOpacity>
+// export default class Header extends Component {
+//   onPlaylistPress = () => {
+//     // Inside proceeding
 
-        <Text onPress={this.onMessagePress} style={styles.message}>
-          {this.props.message.toUpperCase()}
-        </Text>
+//     // Invoke the callback
+//     if (typeof this.props.onPlaylistPress === 'function') {
+//       this.props.onPlaylistPress();
+//     }
+//   };
 
-        <TouchableOpacity onPress={this.onPlaylistPress}>
-          <Image style={styles.button} source={require('../../images/ic_queue_music_white.png')} />
-        </TouchableOpacity>
-      </View>
-    );
-  }
-}
+//   onMessagePress = () => {
+//     // Inside proceeding
+
+//     // Invoke the callback
+//     if (typeof this.props.onMessagePress === 'function') {
+//       this.props.onMessagePress();
+//     }
+//   };
+
+//   render() {
+//     const { onDownPress } = this.props;
+//     return (
+//       <View style={styles.container}>
+//         <TouchableOpacity onPress={onDownPress}>
+//           <Image
+//             style={styles.button}
+//             source={require('../../images/ic_keyboard_arrow_down_white.png')}
+//           />
+//         </TouchableOpacity>
+
+//         <Text onPress={this.onMessagePress} style={styles.message}>
+//           {this.props.message.toUpperCase()}
+//         </Text>
+
+//         <TouchableOpacity onPress={this.onPlaylistPress}>
+//           <Image style={styles.button} source={require('../../images/ic_queue_music_white.png')} />
+//         </TouchableOpacity>
+//       </View>
+//     );
+//   }
+// }
 
 const styles = StyleSheet.create({
   container: {

@@ -1,68 +1,33 @@
 import React, { Component } from 'react';
 import { StyleSheet, Image, Dimensions } from 'react-native';
-import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import hardSet from 'redux-persist/lib/stateReconciler/hardSet';
 import {
   createBottomTabNavigator,
   createAppContainer,
   createStackNavigator,
 } from 'react-navigation';
 
-import { persistStore, persistReducer } from 'redux-persist';
-import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-import storage from 'redux-persist/lib/storage';
 import HomePage from './src/main-views/HomePage';
+import LoginPage from './src/main-views/LoginPage';
 import PlayerPage from './src/main-views/PlayerPage';
 import SearchPage from './src/main-views/SearchPage';
 import PlaylistManagerPage from './src/child-views/PlaylistManagerPage';
 import AddToPlaylistPage from './src/child-views/AddToPlaylistPage';
 import LibraryPage from './src/main-views/LibraryPage';
-import { reducer, actionCreators } from './src/actions/ReduxImplement';
 import IconGenerator, { iconNames } from './src/components/icon-generator/IconGenerator';
 import InputNamePage from './src/child-views/InputNamePage';
 import FavoriteSongPage from './src/child-views/FavoriteSongPage';
-
-// Redux persist
-// Thank to https://blog.reactnativecoach.com/the-definitive-guide-to-redux-persist-84738167975.
-const persistConfig = {
-  key: 'root',
-  storage,
-  stateReconciler: autoMergeLevel2,
-  timeout: null,
-  // stateReconciler: hardSet,
-};
-
-const pReducer = persistReducer(persistConfig, reducer);
-
-const store = createStore(pReducer);
-const persistor = persistStore(store);
-
-// Get all the data
-// Init global store
-// const store = createStore(reducer);
+import { store, persistor } from './src/actions/redux-persist';
 
 export default class App extends Component {
-  // store = createStore(reducer);
-
   constructor(props) {
     super(props);
-
     this.state = {};
-    // this.state = {
-    //   playingTrack,
-    //   playlist,
-    //   screen,
-    //   currentTime,
-    //   listOfSubjectInfo,
-    // };
   }
 
   componentWillMount() {
     this.unsubscribe = store.subscribe(() => {
-      // const { playingSong, playlist, screen, currentTime, listOfSubjectInfo } = store.getState();
-      // this.setState({ playingSong, playlist, screen, currentTime, listOfSubjectInfo });
       console.log('Store has been modified: ');
       console.log(store.getState());
     });
@@ -147,12 +112,28 @@ PlayerStack.navigationOptions = ({ navigation }) => {
   };
 };
 
+const HomeStack = createStackNavigator(
+  {
+    Login: LoginPage,
+  },
+  {
+    initialRouteName: 'Login',
+  }
+);
+
 const TabNavigator = createBottomTabNavigator(
   {
     Home: { screen: HomePage },
     Player: { screen: PlayerStack },
     Search: { screen: SearchPage },
     Library: { screen: LibraryStack },
+    Login: {
+      screen: LoginPage,
+      navigationOptions: {
+        showIcon: false,
+        tabBarLabel: 'homezz',
+      },
+    },
   },
   {
     initialRouteName: 'Home',

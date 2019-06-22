@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
-import { actionCreators } from '../actions/ReduxImplement';
+import { actionCreators } from '../actions/redux-persist';
 import IconGenerator, { iconNames } from '../components/icon-generator/IconGenerator';
 
 class PlaylistManagerPage extends Component {

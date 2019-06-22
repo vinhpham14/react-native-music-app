@@ -12,7 +12,7 @@ import {
 import { connect } from 'react-redux';
 import { Item, SearchResult } from './SearchPage';
 import MiniPlayer from '../components/mini-player/MiniPlayer';
-import { actionCreators } from '../actions/ReduxImplement';
+import { actionCreators } from '../actions/redux-persist';
 import IconGenerator, { iconNames } from '../components/icon-generator/IconGenerator';
 
 class LibraryPage extends Component {
@@ -239,42 +239,6 @@ const CategoryItem = ({ onPress, item }) => {
     </TouchableOpacity>
   );
 };
-
-// const HeaderPage = ({ text }) => {
-//   return (
-//     <View
-//       style={{
-//         flex: 1,
-//         flexDirection: 'row',
-//         alignItems: 'center',
-//         justifyContent: 'space-between',
-//         backgroundColor: 'rgb(34, 35, 38)',
-//       }}
-//     >
-//       <View style={{ flex: 0.1, alignContent: 'center', justifyContent: 'center' }}>
-//         <TouchableOpacity>
-//           <Image
-//             source={require('../images/ic-back-arrow.png')}
-//             style={{ width: 30, height: 30 }}
-//           />
-//         </TouchableOpacity>
-//       </View>
-//       <View style={{ flex: 0.8 }}>
-//         <Text
-//           style={{
-//             color: 'white',
-//             fontWeight: 'bold',
-//             fontSize: 18,
-//             textAlign: 'center',
-//           }}
-//         >
-//           {text}
-//         </Text>
-//       </View>
-//       <View style={{ flex: 0.1 }} />
-//     </View>
-//   );
-// };
 
 const { width } = Dimensions.get('window');
 const imageSize = 0.14 * width;

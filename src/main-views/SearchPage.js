@@ -14,7 +14,7 @@ import {
 import { connect } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
-import { actionCreators } from '../actions/ReduxImplement';
+import { actionCreators } from '../actions/redux-persist';
 import MiniPlayer from '../components/mini-player/MiniPlayer';
 import { port } from '../constant';
 
