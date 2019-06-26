@@ -12,6 +12,8 @@ export const iconNames = {
   Playlists: 'playlists',
   Songs: 'fav-songs',
   RemoveButton: 'remove-button',
+  LogoApp: 'logo-app',
+  BackArrowIcon: 'back-arrow'
 };
 
 const IconGenerator = ({ iconName, size, onFocused = 1 }) => {
@@ -48,6 +50,12 @@ const IconGenerator = ({ iconName, size, onFocused = 1 }) => {
       break;
     case iconNames.RemoveButton:
       src = require('../../images/ic-remove.png');
+      break;
+    case iconNames.LogoApp:
+      src = require('../../images/logo-app.png');
+      break;
+    case iconNames.BackArrowIcon:
+      src = require('../../images/ic-back-arrow.png');
       break;
     default:
       break;

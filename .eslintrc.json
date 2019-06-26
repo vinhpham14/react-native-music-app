@@ -8,6 +8,8 @@
   ],
   "parser": "babel-eslint",
   "rules": {
+    "no-plusplus": "off",
+    "prettier/prettier": "off",
     "import/no-unresolved": "off",
     "no-use-before-define": "off",
     "react/prop-types": "off",
@@ -23,15 +25,15 @@
       {
         "extensions": [".js", ".jsx"]
       }
-    ],
-    "prettier/prettier": [
-      "error",
-      {
-        "trailingComma": "es5",
-        "singleQuote": true,
-        "printWidth": 100
-      }
     ]
+    // "prettier/prettier": [
+    //   "error",
+    //   {
+    //     "trailingComma": "es5",
+    //     "singleQuote": true,
+    //     "printWidth": 100
+    //   }
+    // ]
   },
   "plugins": ["prettier"]
 }

@@ -8,6 +8,10 @@ import SubjectList from '../components/subject-list/SubjectList';
 import { port } from '../constant';
 
 class HomePage extends Component {
+  static navigationOptions = {
+    header: null
+  };
+
   constructor(props) {
     super(props);
     const { playingTrack, playlist, screen, currentTime, listOfSubjectInfo, paused } = this.props;
@@ -17,7 +21,7 @@ class HomePage extends Component {
       screen,
       currentTime,
       listOfSubjectInfo,
-      paused,
+      paused
     };
   }
 
@@ -50,7 +54,7 @@ class HomePage extends Component {
         playlist = {
           name: data.title,
           tracks: data.songs,
-          playlistArtUrl: data.playlistArtUrl,
+          playlistArtUrl: data.playlistArtUrl
         };
         dispatch(actionCreators.setPlayingPlaylist(playlist));
         dispatch(actionCreators.setCurrentSongTime(0));
@@ -58,7 +62,7 @@ class HomePage extends Component {
         dispatch(
           actionCreators.addRecentlyPlayed({
             type: 'playlist',
-            data: playlist,
+            data: playlist
           })
         );
 
@@ -147,22 +151,22 @@ const styles = StyleSheet.create({
     flex: 0.905,
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    backgroundColor: 'rgb(18,18,18)',
+    backgroundColor: 'rgb(18,18,18)'
   },
   linearGradientEffect: {
     width: '100%',
-    height: '100%',
+    height: '100%'
   },
   flatList: {
     position: 'absolute',
     width: '100%',
     height: '100%',
-    top: 30,
+    top: 30
   },
   item: {
     marginTop: verticalMarginOfSubjectList * height,
-    marginBottom: verticalMarginOfSubjectList * height,
-  },
+    marginBottom: verticalMarginOfSubjectList * height
+  }
 });
 
 export default connect(
@@ -174,7 +178,7 @@ export default connect(
       currentTime,
       listOfSubjectInfo,
       paused,
-      duration,
+      duration
     };
   }
 )(HomePage);

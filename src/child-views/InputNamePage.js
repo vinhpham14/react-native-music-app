@@ -6,7 +6,7 @@ import {
   Dimensions,
   Text,
   TextInput,
-  TouchableOpacity,
+  TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
@@ -37,7 +37,7 @@ class InputNamePage extends Component {
     const newPlaylist = {
       name: playlistName,
       playlistArtUrl: defaultPlaylistArtUrl,
-      tracks: [],
+      tracks: []
     };
 
     dispatch(actionCreators.addUserPlaylists(newPlaylist));
@@ -59,7 +59,7 @@ class InputNamePage extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             // backgroundColor: 'black',
-            position: 'absolute',
+            position: 'absolute'
           }}
         >
           <Text style={{ fontSize: 19, fontWeight: 'bold', color: 'white', paddingBottom: 45 }}>
@@ -72,7 +72,7 @@ class InputNamePage extends Component {
               width: '80%',
               borderBottomWidth: 1,
               borderBottomColor: specifiedGrey,
-              color: 'white',
+              color: 'white'
             }}
             onChangeText={value => {
               this.setState({ playlistName: value });
@@ -84,7 +84,7 @@ class InputNamePage extends Component {
               width: '45%',
               flexDirection: 'row',
               justifyContent: 'space-between',
-              alignItems: 'center',
+              alignItems: 'center'
             }}
           >
             <TouchableOpacity onPress={this.onCancelPressed}>
@@ -109,6 +109,6 @@ const specifiedGrey = 'rgb(147,147,148)';
 
 export default connect(({ userPlaylists }) => {
   return {
-    userPlaylists,
+    userPlaylists
   };
 })(InputNamePage);

@@ -7,7 +7,7 @@ import {
 } from 'react-navigation';
 
 import HomePage from './main-views/HomePage';
-import LoginPage from './main-views/LoginPage';
+import LoggedOutPage from './main-views/LoggedOutPage';
 import PlayerPage from './main-views/PlayerPage';
 import SearchPage from './main-views/SearchPage';
 import PlaylistManagerPage from './child-views/PlaylistManagerPage';
@@ -16,7 +16,12 @@ import LibraryPage from './main-views/LibraryPage';
 import IconGenerator, { iconNames } from './components/icon-generator/IconGenerator';
 import InputNamePage from './child-views/InputNamePage';
 import FavoriteSongPage from './child-views/FavoriteSongPage';
+import InputAccountPage from './main-views/InputAccountPage';
+import CreateAccountPage from './main-views/CreateAccountPage';
 
+//
+// LIBRARY STACK
+//
 const LibraryStack = createStackNavigator(
   {
     Library: LibraryPage,
@@ -57,6 +62,9 @@ LibraryStack.navigationOptions = ({ navigation }) => {
   };
 };
 
+//
+// PLAYER STACK
+//
 const PlayerStack = createStackNavigator(
   {
     Player: PlayerPage,
@@ -78,28 +86,39 @@ PlayerStack.navigationOptions = ({ navigation }) => {
   };
 };
 
+
+//
+// HOME STACK: including login screens
+//
 const HomeStack = createStackNavigator(
   {
-    Login: LoginPage,
+    Home: HomePage,
+    LoggedOut: LoggedOutPage,
+    InputAccount: InputAccountPage,
+    CreateAccount: CreateAccountPage,
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'LoggedOut',
   }
 );
 
+HomeStack.navigationOptions = ({ navigation }) => {
+  const { routeName } = navigation.state.routes[navigation.state.index];
+  const navigationOptions = {};
+
+  if (routeName === 'LoggedOut' || routeName === 'InputAccount' || routeName === 'CreateAccount') {
+    navigationOptions.tabBarVisible = false;
+  }
+
+  return navigationOptions;
+};
+
 const TabNavigator = createBottomTabNavigator(
   {
-    Home: { screen: HomePage },
+    Home: { screen: HomeStack },
     Player: { screen: PlayerStack },
     Search: { screen: SearchPage },
     Library: { screen: LibraryStack },
-    Login: {
-      screen: LoginPage,
-      navigationOptions: {
-        showIcon: false,
-        tabBarLabel: 'homezz',
-      },
-    },
   },
   {
     initialRouteName: 'Home',
@@ -137,12 +156,3 @@ const getTabBarIcon = (navigation, focused) => {
 };
 
 export const createContainer = () => createAppContainer(TabNavigator);
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//   },
-//   nagivatior: {
-//     backgroundColor: 'rgb(34,35,38)',
-//   },
-// });
