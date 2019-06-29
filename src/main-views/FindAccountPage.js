@@ -6,10 +6,14 @@ import {
   Text,
   Dimensions,
   TextInput,
-  Picker
+  Picker,
+  Alert
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import IconGenerator, { iconNames } from '../components/icon-generator/IconGenerator';
+import WaitingPopUp from '../components/waiting-pop-up/WaitingPopUp';
+import { findUser } from '../actions/server-api';
+import CheckSquare from '../components/check-square/CheckSquare';
 
 export default class FindAccountPage extends Component {
   static navigationOptions = { header: null };
@@ -18,26 +22,12 @@ export default class FindAccountPage extends Component {
     super(props);
     this.state = {
       username: '',
-      password: '',
       question: '',
-      answer: ''
+      answer: '',
+      showWaitingPopUp: false,
+      showTick: false
     };
   }
-
-  hiddenText = text => {
-    let hiddenText = '';
-    for (let i = 0; i < text.length; i++) {
-      hiddenText += '*';
-    }
-
-    return hiddenText;
-  };
-
-  updatePassword = value => {
-    this.setState({
-      password: value
-    });
-  };
 
   updateUsername = value => {
     this.setState({
@@ -53,7 +43,67 @@ export default class FindAccountPage extends Component {
 
   onPressBack = () => {
     const { navigation } = this.props;
-    navigation.goBack();
+    navigation.navigate('LoggedOut');
+  };
+
+  onPressFind = () => {
+    const { question, answer, username } = this.state;
+    const { navigation } = this.props;
+
+    findUser(username, question, answer, '').then(json => {
+      console.log(json);
+      if (json.message === 'qna_not_match') {
+        Alert.alert('Find User Failed', 'Question or Answer is not correct.', [
+          {
+            text: 'Create new account',
+            onPress: () => {
+              this.props.navigation.navigate('CreateAccount');
+            },
+            style: 'destructive'
+          },
+          {
+            text: 'OK',
+            onPress: () => {
+              // Nothing here
+            },
+            style: 'default'
+          }
+        ]);
+      } else if (json.message === 'username_not_found') {
+        Alert.alert('Find User Failed', 'Please check your username again.', [
+          {
+            text: 'Create new account',
+            onPress: () => {
+              this.props.navigation.navigate('CreateAccount');
+            },
+            style: 'destructive'
+          },
+          {
+            text: 'OK',
+            onPress: () => {
+              // Nothing here
+            },
+            style: 'default'
+          }
+        ]);
+      } else {
+        this.setState({
+          showTick: true
+        });
+
+        setTimeout(() => {
+          this.setState({
+            showTick: false
+          })
+          
+          navigation.navigate('InputNewPassword', {
+            username: username,
+            question: question,
+            answer: answer
+          });
+        }, 1000);
+      }
+    });
   };
 
   updateAnswer = value => {
@@ -63,13 +113,13 @@ export default class FindAccountPage extends Component {
   };
 
   enableLoginButton = () => {
-    const { username, password, question, answer } = this.state;
-    if (username === '' || password === '' || question === 'Nothing' || answer === '') return false;
+    const { username, question, answer } = this.state;
+    if (username === '' || question === 'Nothing' || question === '' || answer === '') return false;
     return true;
   };
 
   render() {
-    const { password, username, answer, question } = this.state;
+    const { username, answer, question, showWaitingPopUp, showTick } = this.state;
 
     return (
       <LinearGradient
@@ -99,14 +149,17 @@ export default class FindAccountPage extends Component {
         <InputWithHeader
           headerText="Answer above question here."
           value={answer}
-          onChange={this.updatePassword}
+          onChange={this.updateAnswer}
         />
         <TouchableOpacity
           style={[styles.buttonCreate, { opacity: this.enableLoginButton() ? 1 : 0.5 }]}
           disabled={!this.enableLoginButton()}
+          onPress={this.onPressFind}
         >
-          <Text style={{ fontSize: 20, fontWeight: '400', color: 'black' }}>Create</Text>
+          <Text style={{ fontSize: 20, fontWeight: '400', color: 'black' }}>Find</Text>
         </TouchableOpacity>
+
+        {showTick ? <CheckSquare /> : null}
       </LinearGradient>
     );
   }

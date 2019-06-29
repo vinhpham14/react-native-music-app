@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Dimensions, TextInput } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Dimensions, TextInput, Alert } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import IconGenerator, { iconNames } from '../components/icon-generator/IconGenerator';
-import { getUser } from '../actions/server-api';
+import { getUser, getSong } from '../actions/server-api';
 import WaitingPopUp from '../components/waiting-pop-up/WaitingPopUp';
 import { actionCreators } from '../actions/redux-persist';
+import { connect } from 'react-redux';
+import { defaultPlaylistArtUrl } from '../constant';
+import CheckSquare from '../components/check-square/CheckSquare';
 
-export default class InputAccountPage extends Component {
+class InputAccountPage extends Component {
   static navigationOptions = { header: null };
 
   constructor(props) {
@@ -67,15 +70,72 @@ export default class InputAccountPage extends Component {
     setTimeout(() => {
       getUser(username, password).then(json => {
         this.setState({
-          showWaitingPopUp: false
+          showWaitingPopUp: false,
         });
 
         // Navigate to home
         if (json.result === true) {
-          this.props.navigation.navigate('Home');
-          this.props.dispatch(actionCreators.setUser({
-            ...json.user,
-          }))
+          this.setState({
+            showTick: true,
+          });
+
+          const promise = new Promise((resolve, reject) => {
+            this.props.dispatch(actionCreators.clearForUserLogin());
+
+            // Update favorite songs
+            json.user.favoriteSongs.forEach(item => {
+              getSong(item).then(song => {
+                this.props.dispatch(actionCreators.addFavoriteTrack(song));
+              });
+            });
+
+            // Update user's playlists
+            json.user.playlist.forEach(item => {
+              let newPlaylist = {};
+              newPlaylist.name = item.name;
+              newPlaylist.playlistArtUrl = defaultPlaylistArtUrl;
+              newPlaylist.tracks = [];
+              item.songs.forEach(item => {
+                getSong(item).then(song => {
+                  newPlaylist.tracks.push(song);
+                });
+              });
+
+              this.props.dispatch(actionCreators.addUserPlaylists(newPlaylist));
+            });
+
+            // Update user
+            this.props.dispatch(
+              actionCreators.setUser({
+                ...json.user
+              })
+            );
+
+            setTimeout(() => {resolve()}, 600);
+          }).then(() => {
+            this.setState({
+              showTick: false,
+            })
+            this.props.navigation.navigate('Home');
+          });
+        } else {
+          // Wrong username or password
+          Alert.alert('Login Failed', 'Username or password is not correct.', [
+            {
+              text: 'CREATE NEW ACCOUNT',
+              onPress: () => {
+                this.props.navigation.navigate('CreateAccount');
+              },
+              style: 'destructive'
+            },
+            {
+              text: 'TRY AGAIN',
+              onPress: () => {
+                // Nothing here
+              },
+              style: 'default'
+            }
+          ]);
         }
       });
     }, 1450);
@@ -87,7 +147,7 @@ export default class InputAccountPage extends Component {
   };
 
   render() {
-    const { password, username, showWaitingPopUp } = this.state;
+    const { password, username, showWaitingPopUp, showTick } = this.state;
 
     return (
       <LinearGradient
@@ -145,6 +205,7 @@ export default class InputAccountPage extends Component {
           </TouchableOpacity>
         </View>
         {showWaitingPopUp ? <WaitingPopUp /> : null}
+        {showTick ? <CheckSquare /> : null}
       </LinearGradient>
     );
   }
@@ -223,10 +284,8 @@ const styles = StyleSheet.create({
   }
 });
 
-// export default connect(
-//   ({ user }) => {
-//     return {
-//       user
-//     };
-//   }
-// )(HomePage);
+export default connect(({ user }) => {
+  return {
+    user
+  };
+})(InputAccountPage);

@@ -12,6 +12,17 @@ export const getUser = (username, password) => {
     });
 };
 
+export const getSong = id => {
+  return fetch(`${port}/songs/${id}`)
+    .then(respond => respond.json())
+    .then(respondJson => {
+      return respondJson;
+    })
+    .catch(error => {
+      console.log('Something wrong with server when trying to this song from server.');
+    });
+};
+
 export const findUser = (username, question, answer, newPassword) => {
   return fetch(`${port}/users/forgetpassword/`, {
     method: 'PUT',
@@ -35,7 +46,7 @@ export const findUser = (username, question, answer, newPassword) => {
     });
 };
 
-export const createUser = (username, question, answer, newPassword) => {
+export const createUser = (username, question, answer, password) => {
   return fetch(`${port}/users/`, {
     method: 'POST',
     headers: {
@@ -46,7 +57,7 @@ export const createUser = (username, question, answer, newPassword) => {
       username: username,
       question: question,
       answer: answer,
-      password: newPassword
+      password: password
     })
   })
     .then(respond => respond.json())
@@ -76,5 +87,25 @@ export const updateUser = (id, playlist, favoriteSongs) => {
     })
     .catch(error => {
       console.log('Something wrong with server when trying to update user.');
+    });
+};
+
+export const updateUserFavoriteSongs = (id, favoriteSongs) => {
+  return fetch(`${port}/users/${id}/`, {
+    method: 'PUT',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      favoriteSongs: favoriteSongs
+    })
+  })
+    .then(respond => respond.json())
+    .then(respondJson => {
+      return respondJson;
+    })
+    .catch(error => {
+      console.log('Something wrong with server when trying to update favorite songs.');
     });
 };

@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, Dimensions } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import IconGenerator, { iconNames } from '../components/icon-generator/IconGenerator';
+import { actionCreators } from '../actions/redux-persist';
+import { connect } from 'react-redux';
 
-export default class LoggedOutPage extends Component {
+class LoggedOutPage extends Component {
   static navigationOptions = { header: null };
 
   constructor(props) {
@@ -22,7 +24,12 @@ export default class LoggedOutPage extends Component {
   };
 
   onPressUseAsGuest = () => {
-    const { navigation } = this.props;
+    const { navigation, dispatch } = this.props;
+
+    // Set as guest user
+    dispatch(actionCreators.setUser({
+      _id: -1,
+    }));
     navigation.navigate('Home');
   };
 
@@ -147,3 +154,11 @@ const styles = StyleSheet.create({
     color: '#rgb(255, 255, 255)'
   }
 });
+
+export default connect(
+  ({
+  }) => {
+    return {
+    };
+  }
+)(LoggedOutPage);

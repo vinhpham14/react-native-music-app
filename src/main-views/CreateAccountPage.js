@@ -6,10 +6,13 @@ import {
   Text,
   Dimensions,
   TextInput,
-  Picker
+  Picker,
+  Alert
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import IconGenerator, { iconNames } from '../components/icon-generator/IconGenerator';
+import { createUser } from '../actions/server-api';
+import CheckSquare from '../components/check-square/CheckSquare';
 
 export default class InputAccountPage extends Component {
   static navigationOptions = { header: null };
@@ -17,10 +20,11 @@ export default class InputAccountPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
-      password: '',
+      username: 'vinh123',
+      password: '1230',
       question: '',
-      answer: ''
+      answer: '1',
+      showCheck: false
     };
   }
 
@@ -44,17 +48,54 @@ export default class InputAccountPage extends Component {
       username: value
     });
   };
-  
+
   updateQuestion = value => {
     this.setState({
-      question: value,
+      question: value
     });
   };
 
   onPressBack = () => {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     navigation.navigate('LoggedOut');
-  }
+  };
+
+  onPressCreate = () => {
+    const { navigation } = this.props;
+    const { username, question, answer, password } = this.state;
+
+    createUser(username, question, answer, password).then(json => {
+      console.log(json);
+      if (json.message === 'ok') {
+        this.setState({
+          showCheck: true
+        });
+        setTimeout(() => {
+          this.setState({
+            showCheck: false
+          });
+        }, 1200);
+        this.props.navigation.navigate('InputAccountPage');
+      } else {
+        Alert.alert('Create User Failed', 'This username has been used.', [
+          {
+            text: 'Find account',
+            onPress: () => {
+              this.props.navigation.navigate('FindAccount');
+            },
+            style: 'destructive'
+          },
+          {
+            text: 'OK',
+            onPress: () => {
+              // Nothing here
+            },
+            style: 'default'
+          }
+        ]);
+      }
+    });
+  };
 
   updateAnswer = value => {
     this.setState({
@@ -64,7 +105,13 @@ export default class InputAccountPage extends Component {
 
   enableLoginButton = () => {
     const { username, password, question, answer } = this.state;
-    if (username === '' || password === '' || question === 'Nothing' || answer === '')
+    if (
+      username === '' ||
+      password === '' ||
+      question === 'Nothing' ||
+      question === '' ||
+      answer === ''
+    )
       return false;
     return true;
   };
@@ -97,7 +144,11 @@ export default class InputAccountPage extends Component {
           value={this.hiddenText(password)}
           onChange={this.updatePassword}
         />
-        <PickerWithHeader selectedValue={question} headerText="Choose security questions." onValueChange={this.updateQuestion} />
+        <PickerWithHeader
+          selectedValue={question}
+          headerText="Choose security questions."
+          onValueChange={this.updateQuestion}
+        />
         <InputWithHeader
           headerText="Write your security answer."
           value={answer}
@@ -106,9 +157,12 @@ export default class InputAccountPage extends Component {
         <TouchableOpacity
           style={[styles.buttonCreate, { opacity: this.enableLoginButton() ? 1 : 0.5 }]}
           disabled={!this.enableLoginButton()}
+          onPress={this.onPressCreate}
         >
           <Text style={{ fontSize: 20, fontWeight: '400', color: 'black' }}>Create</Text>
         </TouchableOpacity>
+
+        {this.state.showCheck ? <CheckSquare /> : null}
       </LinearGradient>
     );
   }
@@ -122,12 +176,18 @@ const PickerWithHeader = ({ headerText, onValueChange, selectedValue }) => {
         <View style={styles.opacityContainerForInput} />
         <Picker style={styles.picker} selectedValue={selectedValue} onValueChange={onValueChange}>
           <Picker.Item label="-- Please choose one question --" value="Nothing" />
-          <Picker.Item label="What is your hometown's name?" value="What is your hometown's name?" />
+          <Picker.Item
+            label="What is your hometown's name?"
+            value="What is your hometown's name?"
+          />
           <Picker.Item label="What is your pet's name?" value="What is your pet's name?" />
           <Picker.Item label="What is your favorite color?" value="What is your favorite color?" />
           <Picker.Item label="What is your favorite movie?" value="What is your favorite movie?" />
           <Picker.Item label="What is your favorite sport?" value="What is your favorite sport?" />
-          <Picker.Item label="What is your favorite number?" value="What is your favorite number?" />
+          <Picker.Item
+            label="What is your favorite number?"
+            value="What is your favorite number?"
+          />
         </Picker>
       </View>
     </View>

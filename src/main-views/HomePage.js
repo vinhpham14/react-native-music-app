@@ -27,7 +27,7 @@ class HomePage extends Component {
 
   componentDidMount() {
     const subjects = [];
-    const { dispatch, appState, navigation } = this.props;
+    const { dispatch, appState, navigation, user } = this.props;
     // dispatch(actionCreators.purge());
 
     // Get all the recommended subjects
@@ -47,14 +47,8 @@ class HomePage extends Component {
 
     // Subscribe to some events
     this.unsubscribe = navigation.addListener('didFocus', data => {
-      if (appState.isOpenFirstTime) {
-        navigation.navigate('LoggedOut');
-        dispatch(
-          actionCreators.setAppState({
-            isOpenFirstTime: false
-          })
-        );
-      }
+      console.log('On home page focus.');
+      console.log(user);
     });
 
     if (appState.isOpenFirstTime) {

@@ -24,7 +24,7 @@ export default class TestPage extends Component {
 
   componentDidMount() {
     const { username, password, question, answer, newPassword } = this.state;
-    const id = '5d1641953a079a002ffbf344';
+    const _id = '5d1641953a079a002ffbf344';
 
     // Test login => OK
     // getUser('vinh', '1230').then(rs => {

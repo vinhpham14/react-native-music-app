@@ -10,13 +10,25 @@ export default class App extends Component {
     this.state = {};
   }
 
-  componentWillUnmount() {
-    console.log('unmounting');
-    store.dispatch(actionCreators.setAppState({
-      isOpenFirstTime: true,
-    }));
+  componentDidMount() {
+    this.unsubscribe = store.subscribe(() => {
+      console.log('Store change: ');
+      console.log(store.getState());
+    });
+  }
 
-    console.log(store.getState());
+  componentWillUnmount() {
+    // console.log('unmounting');
+    // if (store.getState().user.id === -1) {
+    //   store.dispatch(
+    //     actionCreators.setAppState({
+    //       isOpenFirstTime: true
+    //     })
+    //   );
+    // }
+    // console.log(store.getState());
+
+    this.unsubscribe();
   }
 
   render() {

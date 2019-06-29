@@ -6,7 +6,7 @@ import {
   Text,
   FlatList,
   Dimensions,
-  TouchableOpacity,
+  TouchableOpacity
 } from 'react-native';
 
 const SubjectList = ({ subjectInfo, subject, playlists, description, onPressedItem }) => {
@@ -82,30 +82,27 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 0.045 * width,
-    // backgroundColor: 'yellow',
+    marginLeft: 0.045 * width
   },
   imageText: {
     color: 'white',
     fontWeight: 'bold',
-    textAlign: 'center',
-    // backgroundColor: 'red',
+    textAlign: 'center'
   },
   flatList: {
-    flexDirection: 'row',
-    // backgroundColor: 'grey',
+    flexDirection: 'row'
   },
   itemImage: {
     flex: 1,
     width: imageSize,
-    height: imageSize,
+    height: imageSize
   },
   header: {
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
     // padding: 5,
-    textAlign: 'center',
+    textAlign: 'center'
     // backgroundColor: 'blue',
   },
   descriptionStyle: {
@@ -113,8 +110,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 13,
-    marginBottom: 10,
-  },
+    marginBottom: 10
+  }
 });
 
 export default SubjectList;

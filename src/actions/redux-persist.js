@@ -3,6 +3,7 @@ import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import { persistStore, persistReducer } from 'redux-persist';
 import { createStore } from 'redux';
 import { PLAYLIST, SUBJECT_INFO, LIST_SUBJECT_INFO } from '../fake-data';
+import { updateUserFavoriteSongs } from '../actions/server-api'
 
 export const types = {
   SET_PLAYING_PLAYLIST: 'SET_PLAYING_PLAYLIST',
@@ -23,10 +24,14 @@ export const types = {
   PURGE: 'PURGE',
   SET_USER: 'SET_USER',
   SET_APP_STATE: 'SET_APP_STATE',
+  CLEAR_FOR_USER_LOGIN: 'CLEAR_FOR_USER_LOGIN'
 };
 
 // Helper functions to dispatch actions, optionally with payloads
 export const actionCreators = {
+  clearForUserLogin: () => {
+    return { type: types.CLEAR_FOR_USER_LOGIN };
+  },
   setAppState: state => {
     return { type: types.SET_APP_STATE, payload: state };
   },
@@ -99,9 +104,11 @@ const initialState = {
   recentlyPlayedItems: [],
   userPlaylists: [],
   recentSearches: [],
-  user: {},
+  user: {
+    _id: -1
+  },
   appState: {
-    isOpenFirstTime: 'true',
+    isOpenFirstTime: 'true'
   }
 };
 
@@ -111,13 +118,21 @@ export const reducer = (state = initialState, action) => {
   const { favoriteTracks, recentlyPlayedItems, userPlaylists } = state;
 
   switch (type) {
+    case types.CLEAR_FOR_USER_LOGIN: {
+      return {
+        ...state,
+        favoriteTracks: [],
+        userPlaylists: [],
+      };
+    }
+
     case types.SET_CURRENT_SCREEN: {
       return {
         ...state,
         screen: payload
       };
     }
-    
+
     case types.SET_LIST_OF_SUBJECT_INFO: {
       return {
         ...state,
@@ -128,7 +143,7 @@ export const reducer = (state = initialState, action) => {
     case types.SET_APP_STATE: {
       return {
         ...state,
-        appState: payload,
+        appState: payload
       };
     }
 
@@ -169,10 +184,21 @@ export const reducer = (state = initialState, action) => {
 
     case types.ADD_FAVORITE_TRACKS: {
       if (favoriteTracks.indexOf(payload) !== -1) return {};
-
+      
+      const newFavoriteTracks = [payload, ...favoriteTracks]
+      
+      // Sync with server
+      const updateList = [];
+      newFavoriteTracks.forEach(item => {
+        updateList.push(item._id);
+      })
+      if (state.user._id !== -1) {
+        updateUserFavoriteSongs(state.user._id, updateList).then(() => {});
+      }
+      
       return {
         ...state,
-        favoriteTracks: [payload, ...favoriteTracks]
+        favoriteTracks: newFavoriteTracks,
       };
     }
 
@@ -202,8 +228,6 @@ export const reducer = (state = initialState, action) => {
     case types.ADD_USER_PLAYLISTS: {
       return {
         ...state,
-
-        // Get 15 recently played: playlist or song.
         userPlaylists: [payload, ...userPlaylists]
       };
     }
@@ -237,12 +261,15 @@ export const reducer = (state = initialState, action) => {
     }
 
     case types.SET_USER: {
+      const newUser = {
+        ...payload
+      };
       return {
         ...state,
-        user: payload
+        user: newUser
       };
     }
-    
+
     case types.PURGE: {
       return {};
     }
