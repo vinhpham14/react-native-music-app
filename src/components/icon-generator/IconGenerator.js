@@ -8,12 +8,13 @@ export const iconNames = {
   PlayMusic: 'play-music-button',
   PauseMusic: 'pause',
   SearchTabButton: 'search-button',
-  Library: 'library',
+  User: 'user',
   Playlists: 'playlists',
   Songs: 'fav-songs',
   RemoveButton: 'remove-button',
   LogoApp: 'logo-app',
-  BackArrowIcon: 'back-arrow'
+  BackArrowIcon: 'back-arrow',
+  Library: 'library',
 };
 
 const IconGenerator = ({ iconName, size, onFocused = 1 }) => {
@@ -39,7 +40,7 @@ const IconGenerator = ({ iconName, size, onFocused = 1 }) => {
     case iconNames.SearchTabButton:
       src = require('../../images/ic-search.png');
       break;
-    case iconNames.Library:
+    case iconNames.User:
       src = require('../../images/ic-user.png');
       break;
     case iconNames.Playlists:
@@ -56,6 +57,9 @@ const IconGenerator = ({ iconName, size, onFocused = 1 }) => {
       break;
     case iconNames.BackArrowIcon:
       src = require('../../images/ic-back-arrow.png');
+      break;
+    case iconNames.Library:
+      src = require('../../images/ic-library.png');
       break;
     default:
       break;

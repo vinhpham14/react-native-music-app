@@ -18,6 +18,9 @@ import InputNamePage from './child-views/InputNamePage';
 import FavoriteSongPage from './child-views/FavoriteSongPage';
 import InputAccountPage from './main-views/InputAccountPage';
 import CreateAccountPage from './main-views/CreateAccountPage';
+import FindAccountPage from './main-views/FindAccountPage';
+import WaitingPopUp from './components/waiting-pop-up/WaitingPopUp';
+import TestPage from './main-views/TestPage';
 
 //
 // LIBRARY STACK
@@ -96,9 +99,11 @@ const HomeStack = createStackNavigator(
     LoggedOut: LoggedOutPage,
     InputAccount: InputAccountPage,
     CreateAccount: CreateAccountPage,
+    FindAccount: FindAccountPage,
+    Test: TestPage
   },
   {
-    initialRouteName: 'LoggedOut',
+    initialRouteName: 'Test',
   }
 );
 
@@ -106,8 +111,9 @@ HomeStack.navigationOptions = ({ navigation }) => {
   const { routeName } = navigation.state.routes[navigation.state.index];
   const navigationOptions = {};
 
-  if (routeName === 'LoggedOut' || routeName === 'InputAccount' || routeName === 'CreateAccount') {
+  if (routeName === 'LoggedOut' || routeName === 'InputAccount' || routeName === 'CreateAccount' || routeName === 'FindAccount') {
     navigationOptions.tabBarVisible = false;
+    navigationOptions.initialRouteName = "LoggedOut";
   }
 
   return navigationOptions;

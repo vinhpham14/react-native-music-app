@@ -27,9 +27,10 @@ class HomePage extends Component {
 
   componentDidMount() {
     const subjects = [];
-    const { dispatch } = this.props;
+    const { dispatch, appState, navigation } = this.props;
     // dispatch(actionCreators.purge());
 
+    // Get all the recommended subjects
     fetch(`${port}/recommends`)
       .then(res => res.json())
       .then(json => {
@@ -40,9 +41,30 @@ class HomePage extends Component {
           obj.playlists = data.playlists;
           subjects.push(obj);
         });
+
         dispatch(actionCreators.setListOfSubjectInfo(subjects));
-        console.log(subjects);
       });
+
+    // Subscribe to some events
+    this.unsubscribe = navigation.addListener('didFocus', data => {
+      if (appState.isOpenFirstTime) {
+        navigation.navigate('LoggedOut');
+        dispatch(
+          actionCreators.setAppState({
+            isOpenFirstTime: false
+          })
+        );
+      }
+    });
+
+    if (appState.isOpenFirstTime) {
+      navigation.navigate('LoggedOut');
+      dispatch(
+        actionCreators.setAppState({
+          isOpenFirstTime: false
+        })
+      );
+    }
   }
 
   onPressedPlaylist = item => {
@@ -68,21 +90,6 @@ class HomePage extends Component {
 
         navigation.navigate('Player');
       });
-
-    // Add to recent play
-    // console.log('Plalist on pressed: 1');
-    // console.log(playlist);
-    // (playlist.name);
-    // const recentItem = {
-    //   type: 'playlist',
-    //   data: {
-    //     name: playlist.name,
-    //     tracks: playlist.tracks,
-    //     playlistArtUrl: playlist.playlistArtUrl,
-    //   },
-    // };
-
-    // dispatch(actionCreators.addRecentlyPlayed(recentItem));
   };
 
   togglePlayingState = () => {
@@ -100,7 +107,15 @@ class HomePage extends Component {
   };
 
   render() {
-    const { listOfSubjectInfo, paused, playingTrack, duration, currentTime } = this.props;
+    const {
+      listOfSubjectInfo,
+      paused,
+      playingTrack,
+      duration,
+      currentTime,
+      appState,
+      navigation
+    } = this.props;
 
     return (
       <View style={{ flex: 1 }}>
@@ -170,15 +185,27 @@ const styles = StyleSheet.create({
 });
 
 export default connect(
-  ({ playingTrack, playlist, screen, currentTime, listOfSubjectInfo, paused, duration }) => {
+  ({
+    playingTrack,
+    playlist,
+    screen,
+    currentTime,
+    listOfSubjectInfo,
+    paused,
+    duration,
+    user,
+    appState
+  }) => {
     return {
+      appState,
       playingTrack,
       playlist,
       screen,
       currentTime,
       listOfSubjectInfo,
       paused,
-      duration
+      duration,
+      user
     };
   }
 )(HomePage);

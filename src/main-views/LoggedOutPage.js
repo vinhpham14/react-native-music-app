@@ -43,7 +43,7 @@ export default class LoggedOutPage extends Component {
           }}
         >
           <Text style={styles.textBig}>Millions of songs.</Text>
-          <Text style={styles.textBig}>Free on Ting Music.</Text>
+          <Text style={styles.textBig}>Free on iMusic.</Text>
         </View>
         <TouchableOpacity style={styles.buttonSignUp} onPress={this.onPressSignUp}>
           <Text style={styles.textSignUp}>SIGN UP FOR FREE</Text>

@@ -3,6 +3,8 @@ import { View, StyleSheet, TouchableOpacity, Text, Dimensions, TextInput } from 
 import LinearGradient from 'react-native-linear-gradient';
 import IconGenerator, { iconNames } from '../components/icon-generator/IconGenerator';
 import { getUser } from '../actions/server-api';
+import WaitingPopUp from '../components/waiting-pop-up/WaitingPopUp';
+import { actionCreators } from '../actions/redux-persist';
 
 export default class InputAccountPage extends Component {
   static navigationOptions = { header: null };
@@ -10,8 +12,9 @@ export default class InputAccountPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
-      password: ''
+      username: 'hitonasi',
+      password: '1234',
+      showWaitingPopUp: false
     };
   }
 
@@ -25,9 +28,17 @@ export default class InputAccountPage extends Component {
   };
 
   updatePassword = value => {
-    this.setState({
-      password: value
-    });
+    const { password } = this.state;
+
+    // Need to refactoring
+    if (value.length < this.state.password.length)
+      this.setState({
+        password: password.substr(0, this.state.password.length - 1)
+      });
+    else
+      this.setState({
+        password: password + value[value.length - 1]
+      });
   };
 
   updateUsername = value => {
@@ -49,12 +60,34 @@ export default class InputAccountPage extends Component {
 
   onPressLoginInButton = () => {
     const { username, password } = this.state;
-    console.log("inside the method");
-    console.log(getUser(username, password));
+    this.setState({
+      showWaitingPopUp: true
+    });
+
+    setTimeout(() => {
+      getUser(username, password).then(json => {
+        this.setState({
+          showWaitingPopUp: false
+        });
+
+        // Navigate to home
+        if (json.result === true) {
+          this.props.navigation.navigate('Home');
+          this.props.dispatch(actionCreators.setUser({
+            ...json.user,
+          }))
+        }
+      });
+    }, 1450);
+  };
+
+  onPressForgotPassword = () => {
+    const { navigation } = this.props;
+    navigation.navigate('FindAccount');
   };
 
   render() {
-    const { password, username } = this.state;
+    const { password, username, showWaitingPopUp } = this.state;
 
     return (
       <LinearGradient
@@ -99,6 +132,7 @@ export default class InputAccountPage extends Component {
               textAlignVertical: 'center',
               textDecorationLine: 'underline'
             }}
+            onPress={this.onPressForgotPassword}
           >
             Forgot the password?
           </Text>
@@ -110,6 +144,7 @@ export default class InputAccountPage extends Component {
             <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'black' }}>LOG IN</Text>
           </TouchableOpacity>
         </View>
+        {showWaitingPopUp ? <WaitingPopUp /> : null}
       </LinearGradient>
     );
   }
@@ -187,3 +222,11 @@ const styles = StyleSheet.create({
     marginBottom: 10
   }
 });
+
+// export default connect(
+//   ({ user }) => {
+//     return {
+//       user
+//     };
+//   }
+// )(HomePage);

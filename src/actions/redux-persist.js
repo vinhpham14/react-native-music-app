@@ -21,10 +21,18 @@ export const types = {
   ADD_TRACK_TO_PLAYLIST: 'ADD_TRACK_TO_PLAYLIST',
   SET_RECENT_SEARCHES: 'SET_RECENT_SEARCHES',
   PURGE: 'PURGE',
+  SET_USER: 'SET_USER',
+  SET_APP_STATE: 'SET_APP_STATE',
 };
 
 // Helper functions to dispatch actions, optionally with payloads
 export const actionCreators = {
+  setAppState: state => {
+    return { type: types.SET_APP_STATE, payload: state };
+  },
+  setUser: user => {
+    return { type: types.SET_USER, payload: user };
+  },
   setPlayingPlaylist: playlist => {
     return { type: types.SET_PLAYING_PLAYLIST, payload: playlist };
   },
@@ -72,14 +80,14 @@ export const actionCreators = {
   },
   purge: () => {
     return { type: types.PURGE };
-  },
+  }
 };
 
 // Initial state of the store
 const initialState = {
   playingTrack: {
     title: 'No song is playing',
-    artist: ' •  • ',
+    artist: ' •  • '
   },
   playlist: PLAYLIST,
   screen: 'home',
@@ -91,6 +99,10 @@ const initialState = {
   recentlyPlayedItems: [],
   userPlaylists: [],
   recentSearches: [],
+  user: {},
+  appState: {
+    isOpenFirstTime: 'true',
+  }
 };
 
 // Function to handle actions and update the state of the store.
@@ -102,105 +114,139 @@ export const reducer = (state = initialState, action) => {
     case types.SET_CURRENT_SCREEN: {
       return {
         ...state,
-        screen: payload,
+        screen: payload
       };
     }
+    
     case types.SET_LIST_OF_SUBJECT_INFO: {
       return {
         ...state,
-        listOfSubjectInfo: payload,
+        listOfSubjectInfo: payload
       };
     }
+
+    case types.SET_APP_STATE: {
+      return {
+        ...state,
+        appState: payload,
+      };
+    }
+
     case types.SET_CURRENT_SONG_TIME: {
       return {
         ...state,
-        currentTime: payload,
+        currentTime: payload
       };
     }
+
     case types.SET_PLAYING_PLAYLIST: {
       return {
         ...state,
-        playlist: payload,
+        playlist: payload
       };
     }
+
     case types.SET_PLAYING_TRACK: {
       return {
         ...state,
-        playingTrack: payload,
+        playingTrack: payload
       };
     }
+
     case types.SET_PAUSED: {
       return {
         ...state,
-        paused: payload,
+        paused: payload
       };
     }
+
     case types.SET_DURATION: {
       return {
         ...state,
-        duration: payload,
+        duration: payload
       };
     }
+
     case types.ADD_FAVORITE_TRACKS: {
       if (favoriteTracks.indexOf(payload) !== -1) return {};
 
       return {
         ...state,
-        favoriteTracks: [payload, ...favoriteTracks],
+        favoriteTracks: [payload, ...favoriteTracks]
       };
     }
+
     case types.REMOVE_FAVORITE_TRACKS: {
       return {
         ...state,
-        favoriteTracks: favoriteTracks.filter((track, i) => track !== payload),
+        favoriteTracks: favoriteTracks.filter((track, i) => track !== payload)
       };
     }
+
     case types.ADD_RECENTLY_PLAYED: {
       return {
         ...state,
 
         // Get 15 recently played: playlist or song.
-        recentlyPlayedItems: [payload, ...recentlyPlayedItems].slice(0, 14),
+        recentlyPlayedItems: [payload, ...recentlyPlayedItems].slice(0, 14)
       };
     }
+
     case types.REMOVE_RECENTLY_PLAYED: {
       return {
         ...state,
-        recentlyPlayedItems: recentlyPlayedItems.filter((track, i) => track !== payload),
+        recentlyPlayedItems: recentlyPlayedItems.filter((track, i) => track !== payload)
       };
     }
+
     case types.ADD_USER_PLAYLISTS: {
       return {
         ...state,
 
         // Get 15 recently played: playlist or song.
-        userPlaylists: [payload, ...userPlaylists],
+        userPlaylists: [payload, ...userPlaylists]
       };
     }
+
     case types.REMOVE_USER_PLAYLISTS: {
       return {
         ...state,
-        userPlaylists: userPlaylists.filter((track, i) => track !== payload),
+        userPlaylists: userPlaylists.filter((track, i) => track !== payload)
       };
     }
+
     case types.ADD_TRACK_TO_PLAYLIST: {
       const index = userPlaylists.indexOf(payload.playlist);
+
       if (userPlaylists[index].tracks.indexOf(payload.track) < 0)
         userPlaylists[index].tracks.push(payload.track);
+
+      // Trigger the screens that pulled this props to update.
+      const newUserPlaylists = [...userPlaylists];
       return {
         ...state,
-        userPlaylists,
+        userPlaylists: newUserPlaylists
       };
     }
+
     case types.SET_RECENT_SEARCHES: {
       return {
         ...state,
-        recentSearches: payload,
+        recentSearches: payload
       };
     }
+
+    case types.SET_USER: {
+      return {
+        ...state,
+        user: payload
+      };
+    }
+    
     case types.PURGE: {
       return {};
     }
+
     default: {
       return state;
     }
@@ -213,7 +259,7 @@ const persistConfig = {
   key: 'root',
   storage,
   stateReconciler: autoMergeLevel2,
-  timeout: null,
+  timeout: null
 };
 
 const pReducer = persistReducer(persistConfig, reducer);

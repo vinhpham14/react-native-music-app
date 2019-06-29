@@ -66,6 +66,8 @@ class LibraryPage extends Component {
       navigation.navigate('PlaylistManager');
     } else if (label === 'Favorite Songs') {
       navigation.navigate('FavoriteSongs');
+    } else if (label === 'Log In Your Account') {
+      navigation.navigate('LoggedOut');
     }
   };
 
@@ -78,19 +80,11 @@ class LibraryPage extends Component {
       duration,
       currentTime,
       recentlyPlayedItems,
+      user,
     } = this.props;
 
     return (
       <View style={{ flex: 1, backgroundColor: 'rgb(18,18,18)' }}>
-        {/* <View
-          style={{
-            flex: 0.1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <HeaderPage text="Your Library" />
-        </View> */}
         <View style={{ flex: 0.905 }}>
           <ScrollView style={{ flex: 1 }}>
             <FlatList
@@ -98,6 +92,7 @@ class LibraryPage extends Component {
               data={[
                 { label: 'Playlists', iconName: 'playlists' },
                 { label: 'Favorite Songs', iconName: 'fav-songs' },
+                { label: user ? 'Log Out' : 'Log In Your Account', iconName: 'user' },
               ]}
               keyExtractor={(item, index) => index.toString()}
               renderItem={obj => {
