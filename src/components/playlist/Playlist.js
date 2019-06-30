@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  BackHandler,
+  BackHandler
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -47,17 +47,38 @@ export default class Playlist extends Component {
                   onTrackPressed(item);
                 }}
               >
-                <View style={styles.playlistItem}>
-                  <Text
-                    style={[
-                      styles.playlistItemTitle,
-                      item === playingTrack ? styles.selectedTrack : {},
-                    ]}
+                <View style={{ flexDirection: 'row'}}>
+                  <View style={styles.playlistItem}>
+                    <Text
+                      style={[
+                        styles.playlistItemTitle,
+                        item === playingTrack ? styles.selectedTrack : {}
+                      ]}
+                    >
+                      {item.title}
+                    </Text>
+                    <Text style={styles.playlistItemMeta}>{`${item.artist}`}</Text>
+                    {/* <Text style={styles.playlistItemMeta}>{`${item.artist} • ${item.album}`}</Text> */}
+                  </View>
+
+                  {/* <View
+                    style={{
+                      flex: 0.15,
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
                   >
-                    {item.title}
-                  </Text>
-                  <Text style={styles.playlistItemMeta}>{`${item.artist}`}</Text>
-                  {/* <Text style={styles.playlistItemMeta}>{`${item.artist} • ${item.album}`}</Text> */}
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.props.onPressRemove(item);
+                      }}
+                    >
+                      <Image
+                        style={{ width: 22, height: 22 }}
+                        source={require('../../images/ic-remove.png')}
+                      />
+                    </TouchableOpacity>
+                  </View> */}
                 </View>
               </TouchableOpacity>
             )}
@@ -74,15 +95,15 @@ const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   header: {
     width: '100%',
-    height: (5 * height) / 100 + 400, // 400: height of playlistDetails
+    height: (5 * height) / 100 + 400 // 400: height of playlistDetails
   },
   list: {
     width: '100%',
-    backgroundColor: '#121212',
+    backgroundColor: '#121212'
   },
   playlistDetails: {
     width: '100%',
@@ -90,24 +111,24 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 50,
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   playlistArt: {
     width: 180,
-    height: 180,
+    height: 180
   },
   playlistTitle: {
     // fontFamily: 'gibson-bold',
     color: '#fff',
     fontSize: 25,
     fontWeight: 'bold',
-    marginTop: 25,
+    marginTop: 25
   },
   playlistSubtitle: {
     // fontFamily: 'gibson-regular',
     color: '#b9bdbe',
     fontSize: 12,
-    marginTop: 15,
+    marginTop: 15
   },
   playlistButton: {
     backgroundColor: '#2ab759',
@@ -117,31 +138,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 100,
-    marginTop: 30,
+    marginTop: 30
   },
   playlistButtonText: {
     // fontFamily: 'gibson-bold',
     fontSize: 12,
     color: '#fff',
-    letterSpacing: 2,
+    letterSpacing: 2
   },
   playlistItem: {
     marginLeft: 25,
-    marginBottom: 25,
+    marginVertical: 12,
   },
   playlistItemTitle: {
     // fontFamily: 'gibson-bold',
     fontSize: 18,
-    color: '#fff',
+    color: '#fff'
   },
   playlistItemMeta: {
     // fontFamily: 'gibson-regular',
     color: '#b9bdbe',
-    fontSize: 15,
+    fontSize: 15
   },
   selectedTrack: {
     fontSize: 18,
     color: 'rgb(28, 181, 82)',
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold'
+  }
 });

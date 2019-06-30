@@ -27,7 +27,7 @@ class PlayerPage extends Component {
       isChanging: false,
       showPlaylist: false,
       playlist,
-      playingTrack,
+      playingTrack
     };
   }
 
@@ -36,7 +36,7 @@ class PlayerPage extends Component {
     if (nextProps.playlist !== prevState.playlist) {
       state = {
         ...state,
-        selectedTrack: 0,
+        selectedTrack: 0
       };
     }
     if (nextProps.playingTrack !== prevState.playingTrack) {
@@ -49,11 +49,23 @@ class PlayerPage extends Component {
       state = {
         ...state,
         playingTrack: nextProps.playingTrack,
-        heartEnabled,
+        heartEnabled
       };
     }
 
     return { ...nextProps, ...state };
+  }
+
+  componentDidMount() {
+    this.props.navigation.addListener('didFocus', () => {
+      if (this.props.showPlaylistInPlayer === true) {
+        this.setState({
+          showPlaylist: this.props.showPlaylistInPlayer
+        });
+
+        this.props.dispatch(actionCreators.setShowPlaylistInPlayer(false));
+      }
+    });
   }
 
   setDuration = data => {
@@ -84,9 +96,9 @@ class PlayerPage extends Component {
       [
         {
           text: 'Cancel',
-          style: 'cancel',
+          style: 'cancel'
         },
-        { text: 'OK' },
+        { text: 'OK' }
       ],
       { cancelable: false }
     );
@@ -121,7 +133,7 @@ class PlayerPage extends Component {
       this.updatePlayingTrack(playlist.tracks[selectedTrack - 1]);
       this.setState({
         isChanging: false,
-        selectedTrack: selectedTrack - 1,
+        selectedTrack: selectedTrack - 1
       });
     } else {
       this.updatePaused(true);
@@ -130,7 +142,7 @@ class PlayerPage extends Component {
       this.updatePlayingTrack(playlist.tracks[selectedTrack]);
       this.videoPlayer.seek(0);
       this.setState({
-        currentPosition: 0,
+        currentPosition: 0
       });
     }
   };
@@ -163,7 +175,7 @@ class PlayerPage extends Component {
       this.updateDuration(1);
       this.setState({
         isChanging: false,
-        selectedTrack: nextTrack,
+        selectedTrack: nextTrack
       });
     }
   };
@@ -208,7 +220,7 @@ class PlayerPage extends Component {
 
     this.setState(prevState => {
       return {
-        heartEnabled: !prevState.heartEnabled,
+        heartEnabled: !prevState.heartEnabled
       };
     });
   };
@@ -221,7 +233,7 @@ class PlayerPage extends Component {
       duration,
       playingTrack,
       favoriteTracks,
-      navigation,
+      navigation
     } = this.props;
     const { selectedTrack, isChanging, repeatOn, shuffleOn, showPlaylist } = this.state;
 
@@ -322,16 +334,18 @@ class PlayerPage extends Component {
           this.setState({
             isChanging: false,
             selectedTrack: nextTrack,
-            showPlaylist: false,
+            showPlaylist: false
           });
         }}
+        // onPressRemove = {(item) => {
+        //   this.props.dispatch(actionCreators.removeTrackFromPlaylist(item, playlist));
+        // }}
       />
     );
 
     // In case we need to navigate to playlist view.
     // This is a dirty way to do this. Should use stack screens with tab navigation.
     // Src: https://reactnavigation.org/docs/en/tab-based-navigation.html#a-stack-navigator-for-each-tab
-    const _showPlaylist = navigation.getParam('showPlaylist', showPlaylist);
     return (
       <View style={styles.container}>
         {showPlaylist ? playlistView : playerView}
@@ -347,20 +361,36 @@ const styles = {
   container: {
     flex: 1,
     backgroundColor: 'rgb(4,4,4)',
-    justifyContent: 'space-between',
+    justifyContent: 'space-between'
   },
   audioElement: {
     height: 0,
-    width: 0,
+    width: 0
   },
   header: {
     width: '100%',
-    height: '100%',
-  },
+    height: '100%'
+  }
 };
 
 export default connect(
-  ({ playlist, paused, currentTime, duration, playingTrack, favoriteTracks }) => {
-    return { playlist, paused, currentTime, duration, playingTrack, favoriteTracks };
+  ({
+    playlist,
+    paused,
+    currentTime,
+    duration,
+    playingTrack,
+    favoriteTracks,
+    showPlaylistInPlayer
+  }) => {
+    return {
+      playlist,
+      paused,
+      currentTime,
+      duration,
+      playingTrack,
+      favoriteTracks,
+      showPlaylistInPlayer
+    };
   }
 )(PlayerPage);

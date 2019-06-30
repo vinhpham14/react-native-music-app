@@ -81,6 +81,7 @@ class PlaylistManagerPage extends Component {
                     'https://contentpl-a.akamaihd.net/images/genre_moods/image/medium/Compilation.jpg';
                   dispatch(actionCreators.setPlayingPlaylist(playlist));
                   dispatch(actionCreators.setPlayingTrack(playlist.tracks[0]));
+                  dispatch(actionCreators.setShowPlaylistInPlayer(true));
                   navigation.navigate('Player');
                 }
               }}

@@ -70,6 +70,7 @@ class LibraryPage extends Component {
     } else if (label === 'Sign In' || label === 'Log Out') {
 
       dispatch(actionCreators.setPaused(true));
+      dispatch(actionCreators.clearForUserLogin());
 
       this.setState({
         showWaiting: true

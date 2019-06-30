@@ -21,11 +21,13 @@ export const types = {
   ADD_USER_PLAYLISTS: 'ADD_USER_PLAYLISTS',
   REMOVE_USER_PLAYLISTS: 'REMOVE_USER_PLAYLISTS',
   ADD_TRACK_TO_PLAYLIST: 'ADD_TRACK_TO_PLAYLIST',
+  REMOVE_TRACK_FROM_PLAYLIST: 'REMOVE_TRACK_FROM_PLAYLIST',
   SET_RECENT_SEARCHES: 'SET_RECENT_SEARCHES',
   PURGE: 'PURGE',
   SET_USER: 'SET_USER',
   SET_APP_STATE: 'SET_APP_STATE',
-  CLEAR_FOR_USER_LOGIN: 'CLEAR_FOR_USER_LOGIN'
+  CLEAR_FOR_USER_LOGIN: 'CLEAR_FOR_USER_LOGIN',
+  SET_SHOW_PLAYLIST_IN_PLAYER: 'SET_SHOW_PLAYLIST_IN_PLAYER'
 };
 
 // Helper functions to dispatch actions, optionally with payloads
@@ -81,11 +83,17 @@ export const actionCreators = {
   addTrackToPlaylist: (track, playlist) => {
     return { type: types.ADD_TRACK_TO_PLAYLIST, payload: { track, playlist } };
   },
+  // removeTrackFromPlaylist: (track, playlist) => {
+  //   return { type: types.REMOVE_TRACK_FROM_PLAYLIST, payload: { track, playlist } };
+  // },
   setRecentSearches: list => {
     return { type: types.SET_RECENT_SEARCHES, payload: list };
   },
   purge: () => {
     return { type: types.PURGE };
+  },
+  setShowPlaylistInPlayer: showPlaylistInPlayer => {
+    return { type: types.SET_SHOW_PLAYLIST_IN_PLAYER, payload: showPlaylistInPlayer };
   }
 };
 
@@ -110,7 +118,8 @@ const initialState = {
   },
   appState: {
     isOpenFirstTime: 'true'
-  }
+  },
+  showPlaylistInPlayer: false
 };
 
 // Function to handle actions and update the state of the store.
@@ -274,6 +283,32 @@ export const reducer = (state = initialState, action) => {
       };
     }
 
+    case types.REMOVE_TRACK_FROM_PLAYLIST: {
+      let i = 0;
+      for (i = 0; i < userPlaylists.length; i++) {
+        if (userPlaylists[i].name === payload.playlist.name) {
+          break;
+        }
+      }
+
+      console.log('indise');
+      console.log(i);
+
+      userPlaylists[i].tracks = userPlaylists[i].tracks.filter((track, i) => {
+        track._id !== payload.track._id;
+      });
+
+      const newUserPlaylists = [...userPlaylists];
+
+      // Sync with server
+      syncUserPlaylists(state.user._id, newUserPlaylists);
+
+      return {
+        ...state,
+        userPlaylists: newUserPlaylists
+      };
+    }
+
     case types.SET_RECENT_SEARCHES: {
       return {
         ...state,
@@ -288,6 +323,15 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         user: newUser
+      };
+    }
+
+    case types.SET_SHOW_PLAYLIST_IN_PLAYER: {
+      console.log('inside set show playlist');
+      console.log(payload);
+      return {
+        ...state,
+        showPlaylistInPlayer: payload
       };
     }
 
