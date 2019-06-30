@@ -67,7 +67,7 @@ class LibraryPage extends Component {
       navigation.navigate('PlaylistManager');
     } else if (label === 'Favorite Songs') {
       navigation.navigate('FavoriteSongs');
-    } else if (label === 'Sign In' || label === 'Log Out') {
+    } else {
 
       dispatch(actionCreators.setPaused(true));
       dispatch(actionCreators.clearForUserLogin());
@@ -107,7 +107,7 @@ class LibraryPage extends Component {
               data={[
                 { label: 'Playlists', iconName: 'playlists' },
                 { label: 'Favorite Songs', iconName: 'fav-songs' },
-                { label: user._id !== -1 ? 'Log Out' : 'Sign In', iconName: 'user' }
+                { label: user._id !== -1 ? `Log Out  ${user.username}` : 'Sign In', iconName: 'user' }
               ]}
               keyExtractor={(item, index) => index.toString()}
               renderItem={obj => {
