@@ -20,10 +20,10 @@ export default class InputAccountPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: 'vinh123',
-      password: '1230',
+      username: '',
+      password: '',
       question: '',
-      answer: '1',
+      answer: '',
       showCheck: false
     };
   }
@@ -74,8 +74,8 @@ export default class InputAccountPage extends Component {
           this.setState({
             showCheck: false
           });
+          this.props.navigation.navigate('InputAccount');
         }, 1200);
-        this.props.navigation.navigate('InputAccountPage');
       } else {
         Alert.alert('Create User Failed', 'This username has been used.', [
           {

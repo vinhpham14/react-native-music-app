@@ -100,10 +100,11 @@ const HomeStack = createStackNavigator(
     InputAccount: InputAccountPage,
     CreateAccount: CreateAccountPage,
     FindAccount: FindAccountPage,
-    InputNewPassword: InputNewPassword
+    InputNewPassword: InputNewPassword,
+    TestPage: TestPage
   },
   {
-    initialRouteName: 'LoggedOut',
+    initialRouteName: 'Home',
   }
 );
 

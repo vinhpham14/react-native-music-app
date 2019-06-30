@@ -109,3 +109,23 @@ export const updateUserFavoriteSongs = (id, favoriteSongs) => {
       console.log('Something wrong with server when trying to update favorite songs.');
     });
 };
+
+export const updateUserPlaylists = (id, userPlaylists) => {
+  return fetch(`${port}/users/${id}/`, {
+    method: 'PUT',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      playlist: userPlaylists
+    })
+  })
+    .then(respond => respond.json())
+    .then(respondJson => {
+      return respondJson;
+    })
+    .catch(error => {
+      console.log('Something wrong with server when trying to update user playlists.');
+    });
+};

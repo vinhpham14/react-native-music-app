@@ -26,6 +26,8 @@ export default class TestPage extends Component {
     const { username, password, question, answer, newPassword } = this.state;
     const _id = '5d1641953a079a002ffbf344';
 
+
+
     // Test login => OK
     // getUser('vinh', '1230').then(rs => {
     //   console.log(rs);
@@ -46,9 +48,13 @@ export default class TestPage extends Component {
     // //
     // // Test update account => Oke
     // //
-    updateUser(id, [{ songs: [], name: 'nHac' }], []).then(rs => {
+    // updateUser(_id, [{ songs: [], name: 'nHac' }], []).then(rs => {
+    //   console.log(rs);
+    // });
+
+    getUser('hitonasi', '1234').then(rs => {
       console.log(rs);
-    });
+    })
   }
 
   render() {

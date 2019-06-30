@@ -15,8 +15,8 @@ class InputAccountPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: 'hitonasi',
-      password: '1234',
+      username: '',
+      password: '',
       showWaitingPopUp: false
     };
   }

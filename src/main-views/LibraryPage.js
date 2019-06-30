@@ -7,17 +7,18 @@ import {
   ScrollView,
   StyleSheet,
   Dimensions,
-  FlatList,
+  FlatList
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Item, SearchResult } from './SearchPage';
 import MiniPlayer from '../components/mini-player/MiniPlayer';
 import { actionCreators } from '../actions/redux-persist';
 import IconGenerator, { iconNames } from '../components/icon-generator/IconGenerator';
+import WaitingPopUp from '../components/waiting-pop-up/WaitingPopUp';
 
 class LibraryPage extends Component {
   static navigationOptions = {
-    title: 'Your Library',
+    title: 'Your Library'
   };
 
   constructor(props) {
@@ -37,14 +38,14 @@ class LibraryPage extends Component {
   navigateToPlayer = () => {
     const { navigation } = this.props;
     navigation.navigate('Player', {
-      showPlaylist: 'false',
+      showPlaylist: 'false'
     });
   };
 
   navigateToPlaylist = () => {
     const { navigation } = this.props;
     navigation.navigate('Player', {
-      showPlaylist: 'true',
+      showPlaylist: 'true'
     });
   };
 
@@ -60,14 +61,27 @@ class LibraryPage extends Component {
 
   onPressedCategoryItem = item => {
     const { label } = item;
-    const { navigation } = this.props;
+    const { navigation, dispatch } = this.props;
 
     if (label === 'Playlists') {
       navigation.navigate('PlaylistManager');
     } else if (label === 'Favorite Songs') {
       navigation.navigate('FavoriteSongs');
-    } else if (label === 'Log In Your Account') {
-      navigation.navigate('LoggedOut');
+    } else if (label === 'Sign In' || label === 'Log Out') {
+
+      dispatch(actionCreators.setPaused(true));
+
+      this.setState({
+        showWaiting: true
+      });
+
+      setTimeout(() => {
+        this.setState({
+          showWaiting: false
+        });
+
+        navigation.navigate('LoggedOut');
+      }, 1000);
     }
   };
 
@@ -80,7 +94,7 @@ class LibraryPage extends Component {
       duration,
       currentTime,
       recentlyPlayedItems,
-      user,
+      user
     } = this.props;
 
     return (
@@ -92,7 +106,7 @@ class LibraryPage extends Component {
               data={[
                 { label: 'Playlists', iconName: 'playlists' },
                 { label: 'Favorite Songs', iconName: 'fav-songs' },
-                { label: user ? 'Log Out' : 'Log In Your Account', iconName: 'user' },
+                { label: user._id !== -1 ? 'Log Out' : 'Sign In', iconName: 'user' }
               ]}
               keyExtractor={(item, index) => index.toString()}
               renderItem={obj => {
@@ -123,6 +137,7 @@ class LibraryPage extends Component {
               }}
             />
           </ScrollView>
+          {this.state.showWaiting ? <WaitingPopUp /> : null}
         </View>
         <View style={{ flex: 0.095, backgroundColor: '#121212' }}>
           <MiniPlayer
@@ -177,7 +192,7 @@ const RecentlyPlayedItem = ({ onPress, item, enableRemove, onPressedRemove }) =>
           flexDirection: 'row',
           paddingHorizontal: 20,
           marginVertical: 12,
-          alignItems: 'center',
+          alignItems: 'center'
         }}
       >
         <View style={{ flex: 0.2 }}>
@@ -219,7 +234,7 @@ const CategoryItem = ({ onPress, item }) => {
           marginVertical: 18,
           alignItems: 'center',
           justifyContent: 'center',
-          width: '100%',
+          width: '100%'
         }}
       >
         <View style={{ flex: 0.184, justifyContent: 'center', alignItems: 'center' }}>
@@ -244,30 +259,30 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontSize: 19,
-    marginTop: 25,
+    marginTop: 25
   },
   imageSong: {
     width: imageSize,
     height: imageSize,
-    borderRadius: 90,
+    borderRadius: 90
   },
   imagePlaylist: {
     width: imageSize,
     height: imageSize,
-    borderRadius: 0,
+    borderRadius: 0
   },
   artistText: {
     paddingHorizontal: 10,
-    color: '#b3b3b3',
+    color: '#b3b3b3'
   },
   titleText: {
     paddingHorizontal: 10,
-    color: 'white',
-  },
+    color: 'white'
+  }
 });
 
 export default connect(
-  ({ favoriteTracks, playingTrack, paused, duration, currentTime, recentlyPlayedItems }) => {
+  ({ favoriteTracks, playingTrack, paused, duration, currentTime, recentlyPlayedItems, user }) => {
     return {
       favoriteTracks,
       playingTrack,
@@ -275,6 +290,7 @@ export default connect(
       duration,
       currentTime,
       recentlyPlayedItems,
+      user
     };
   }
 )(LibraryPage);

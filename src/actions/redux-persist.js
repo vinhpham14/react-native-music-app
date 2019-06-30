@@ -3,7 +3,8 @@ import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import { persistStore, persistReducer } from 'redux-persist';
 import { createStore } from 'redux';
 import { PLAYLIST, SUBJECT_INFO, LIST_SUBJECT_INFO } from '../fake-data';
-import { updateUserFavoriteSongs } from '../actions/server-api'
+import { updateUserFavoriteSongs, updateUserPlaylists } from '../actions/server-api';
+import { defaultPlaylistArtUrl } from '../constant';
 
 export const types = {
   SET_PLAYING_PLAYLIST: 'SET_PLAYING_PLAYLIST',
@@ -122,7 +123,7 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         favoriteTracks: [],
-        userPlaylists: [],
+        userPlaylists: []
       };
     }
 
@@ -184,28 +185,38 @@ export const reducer = (state = initialState, action) => {
 
     case types.ADD_FAVORITE_TRACKS: {
       if (favoriteTracks.indexOf(payload) !== -1) return {};
-      
-      const newFavoriteTracks = [payload, ...favoriteTracks]
-      
+
+      const newFavoriteTracks = [payload, ...favoriteTracks];
+
       // Sync with server
       const updateList = [];
       newFavoriteTracks.forEach(item => {
         updateList.push(item._id);
-      })
+      });
       if (state.user._id !== -1) {
         updateUserFavoriteSongs(state.user._id, updateList).then(() => {});
       }
-      
+
       return {
         ...state,
-        favoriteTracks: newFavoriteTracks,
+        favoriteTracks: newFavoriteTracks
       };
     }
 
     case types.REMOVE_FAVORITE_TRACKS: {
+      const newFavoriteTracks = favoriteTracks.filter((track, i) => track !== payload);
+      // Sync with server
+      const updateList = [];
+      newFavoriteTracks.forEach(item => {
+        updateList.push(item._id);
+      });
+      if (state.user._id !== -1) {
+        updateUserFavoriteSongs(state.user._id, updateList).then(() => {});
+      }
+
       return {
         ...state,
-        favoriteTracks: favoriteTracks.filter((track, i) => track !== payload)
+        favoriteTracks: newFavoriteTracks
       };
     }
 
@@ -226,16 +237,22 @@ export const reducer = (state = initialState, action) => {
     }
 
     case types.ADD_USER_PLAYLISTS: {
+      const newList = [payload, ...userPlaylists];
+      syncUserPlaylists(state.user._id, newList);
+
       return {
         ...state,
-        userPlaylists: [payload, ...userPlaylists]
+        userPlaylists: newList
       };
     }
 
     case types.REMOVE_USER_PLAYLISTS: {
+      const newUserPlaylists = state.userPlaylists.filter((track, i) => track !== payload);
+      syncUserPlaylists(state.user._id, newUserPlaylists);
+
       return {
         ...state,
-        userPlaylists: userPlaylists.filter((track, i) => track !== payload)
+        userPlaylists: newUserPlaylists
       };
     }
 
@@ -247,6 +264,10 @@ export const reducer = (state = initialState, action) => {
 
       // Trigger the screens that pulled this props to update.
       const newUserPlaylists = [...userPlaylists];
+
+      // Sync with server
+      syncUserPlaylists(state.user._id, newUserPlaylists);
+
       return {
         ...state,
         userPlaylists: newUserPlaylists
@@ -292,3 +313,26 @@ const persistConfig = {
 const pReducer = persistReducer(persistConfig, reducer);
 export const store = createStore(pReducer);
 export const persistor = persistStore(store);
+
+const syncUserPlaylists = (id, playlists) => {
+  if (id === -1) return;
+
+  const newList = [];
+  playlists.forEach(item => {
+    const newPlaylist = {};
+    newPlaylist.name = item.name;
+    newPlaylist.playlistArtUrl = defaultPlaylistArtUrl;
+    newPlaylist.songs = [];
+    item.tracks.forEach(track => {
+      newPlaylist.songs.push(track._id);
+      console.log('add song');
+      console.log(track);
+    });
+
+    newList.push(newPlaylist);
+  });
+
+  updateUserPlaylists(id, newList).then(rs => {
+    console.log(rs);
+  });
+};
