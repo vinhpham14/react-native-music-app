@@ -65,7 +65,7 @@ class SearchPage extends Component {
 
     // Clear text on focus
     this.setState({
-      text: '          ',
+      text: '',
       keySearch: '',
     });
   };
@@ -150,7 +150,7 @@ class SearchPage extends Component {
             onSubmitEditing={value => this.onSubmitEditing(value.nativeEvent.text.trim())}
           />
 
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 0.9 }}>
             {/* TO-DO: Need a cleaner way */}
             {showResult ? (
               <SearchResult
@@ -379,6 +379,7 @@ const styles = StyleSheet.create({
   searchSpace: {
     flex: 0.905,
     padding: 10,
+    top: 20,
     backgroundColor: 'rgb(20, 21, 22)',
     width: '100%',
   },
@@ -389,7 +390,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'normal',
-    paddingLeft: 15,
+    paddingLeft: 30,
+    height: 40,
   },
   placeHolder: {
     backgroundColor: 'rgb(66, 67, 69)',
@@ -398,6 +400,7 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontSize: 18,
+    height: 40,
   },
   categoryText: {
     fontWeight: 'bold',
@@ -409,7 +412,7 @@ const styles = StyleSheet.create({
   image: {
     width: imageSize,
     height: imageSize,
-    borderRadius: 90,
+    borderRadius: imageSize / 2,
   },
   list: {
     marginVertical: 5,

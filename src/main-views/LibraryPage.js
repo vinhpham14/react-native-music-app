@@ -184,7 +184,7 @@ const RecentlyPlayedList = ({ data, onItemPressed, onPressedRemove }) => {
 const RecentlyPlayedItem = ({ onPress, item, enableRemove, onPressedRemove }) => {
   const imgStyle = item.type === 'song' ? styles.imageSong : styles.imagePlaylist;
   const { data } = item;
-
+  console.log("dataz: ", data)
   return (
     <TouchableOpacity onPress={onPress}>
       <View
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
   imageSong: {
     width: imageSize,
     height: imageSize,
-    borderRadius: 90
+    borderRadius: imageSize / 2
   },
   imagePlaylist: {
     width: imageSize,
