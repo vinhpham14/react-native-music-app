@@ -6,3 +6,303 @@ npm install --save react-native-gesture-handler
 npm install link
 
 react-native run-android
+
+
+
+=============
+BÁO CÁO CUỐI KÌ
+Đề tài: Phần Mềm Nghe Nhạc
+Lập trình trên Thiết bị Di động
+ SE346.K11.PMCL
+
+Giảng viên hướng dẫn:  
+ThS. Huỳnh Tuấn Anh
+Sinh viên thực hiện: 
+Phạm Quang Vinh	16521446
+Phan Thanh Tùng	16520695
+
+
+A.	TỔNG QUAN VỀ ĐỀ TÀI
+I.	Đặt vấn đề
+Âm nhạc là một phần quan trọng của cuộc sống. Âm nhạc đã hình thành từ rất xa xưa và phát triển theo sự phát triển của nhân loại, lúc thịnh, lúc suy. Con người xưa dùng âm nhạc để ăn mừng mùa vụ, để đánh dấu những chiến tích vẻ vang, để gắn kết cộng đồng trong các lễ hội, để cầu mong những điều tốt lành. Trong cuộc sống hiện đại ngày nay, âm nhạc là một thứ không thể thiếu. Âm nhạc giúp ta xua tan phiền muộn và áp lực của cuộc sống bận rộn thường nhật. Âm nhạc nuôi dưỡng tâm hồn và giải phóng chúng khỏi những ranh giới hiện có.
+Với sự phát triển của công nghệ hiện nay, âm nhạc ngày càng trở nên dễ dàng để thưởng thức. Với một thiết bị thông minh có kết nối internet như laptop hay smartphone, cả thế giới âm nhạc suốt ngàn năm phát triển đã nằm gọn trong tay người dùng. Tuy nhiên, để tiện lợi nhất cho người dùng, nhóm khách hàng chọn nền tảng mobile, cụ thể là các thiết bị smartphone dùng hệ điều hành Android để phát triển ứng dụng nghe nhạc.
+II.	Mục tiêu
+Xây dựng phần mềm nghe nhạc chạy trên các thiết bị smartphone dùng hệ điều hành android với các chức năng chính như sau:
+-	Nghe nhạc online trên các thiết bị smartphone chạy hệ điều hành Android từ 6.0 trở lên.
+-	Cho phép người dùng đăng ký tài khoản và tạo playlist riêng để nghe lại sau này.
+-	Cho phép tải nhạc và nghe những bài hát đã tải khi không có internet.
+-	Cho phép người dùng chọn cái bài hát yêu thích và có playlist riêng cho các bài hát này.
+-	Tìm kiếm bài hát theo tên bài hát, theo nghệ sĩ, theo thể loại.
+-	Cơ sở dữ liệu bài hát đa dạng, nhiều thể loại, dễ cập nhật sau này.
+Phạm vi
+Do thời gian thực hiện đồ án có hạn, việc xây dựng phần mềm nghe nhạc sẽ tập trung vào các chức năng chính bao gồm:
+-	Nghe nhạc online trên các thiết bị smartphone chạy hệ điều hành Android từ 6.0 trở lên.
+-	Cho phép người dùng đăng ký tài khoản và tạo playlist riêng để nghe lại sau này.
+-	Cho phép người dùng chọn cái bài hát yêu thích và có playlist riêng cho các bài hát này.
+-	Tìm kiếm bài hát theo tên bài hát.
+-	Cơ sở dữ liệu bài hát đa dạng, nhiều thể loại, dễ cập nhật sau này.
+III.	Công cụ sử dụng
+Trong quá trình thực hiện đồ án, nhóm đã sử dụng một số phần mềm phục vụ cho việc tìm hiểu, thiết kế và cài đặt phần mềm, bao gồm:
+-	Android Studio: Máy ảo Android.
+-	Xcode: Máy ảo iOS và build application.
+-	Google Chrome: Debug JavaScript.
+-	Microsoft Visio 2016: Phần mềm hỗ trợ thiết kế các mô hình.
+-	Website Trello.com: Quản lý quá trình thực hiện dự án.
+-	Postman: phần mềm hỗ trợ thử nghiệm các API.
+-	Visual Code: IDE coding react native.
+IV.	Bố cục báo cáo
+•	Phần A: Giới thiệu tổng quan về đề tài.
+Giới thiệu tổng quan về nội dung đề tài. Nội dung chương này bao gồm: lý do chọn đề tài, nội dung và phạm vi nghiên cứu của đề tài bố cục của báo cáo này.
+•	Phần B: Thực hiện đồ án
+Chương 1: Xác định và phân tích yêu cầu
+Trong chương này, nhóm sẽ trình bày sơ lược các yêu cầu của phần mềm nghe nhạc. Từ đó đưa ra hướng tiếp cận và giải quyết các vấn đề được đặt ra
+Chương 2: Thiết kế hệ thống
+Trong chương này, nhóm sẽ trình bày chi tiết quá trình phân tích và thiết kế hệ thống dựa trên ngôn ngữ mô hình hoá UML.
+•	Phần C: Kết Luận
+ 
+B.	QUÁ TRÌNH THỰC HIỆN
+I.	THIẾT KẾ HỆ THỐNG
+1.	Sơ đồ Use Case
+
+
+2.	Danh sách các tác nhân của hệ thống
+STT	Tác nhân của hệ thống	Ý nghĩa
+1	Người dùng	Người dùng của hệ thống, hệ thống chưa có bất kỳ thông tin gì và chưa đăng nhập vào phần mềm
+2	Thành viên	Người dùng của hệ thống, thông tin đã được lưu trữ và đã đăng nhập vào phần mềm
+Bảng 2.1. Bảng danh sách các tác nhân của hệ thống
+3.	Danh sách Use Case
+STT	Use Case	Ý nghĩa
+1	Phát nhạc	Phát bài hát. Bài hát này được lưu trữ ở server và phần mềm cho phép người dùng chọn từ nhiều nguồn: playlist của người dùng, playlist đề xuất,..
+2	Tạo playlist mới	Tạo ra một tập hợp các bài hát theo ý người dùng.
+3	Xóa playlist	Xóa một playlist trong thư viện của người dùng.
+4	Tìm kiếm bài hát	Tìm kiếm một bài hát theo tên của bài hát đó
+5	Đăng nhập	Đăng xuất ra khỏi tài khoản người dùng hiện tại.
+6	Đăng ký tài khoản	Đăng ký tài khoản mới
+7	Tìm mật khẩu	Tìm lại mật khẩu cho người dùng trong trường hợp người dùng quên mật khẩu. 
+Bảng 2.2. Bảng danh sách các Use Case
+4.	Đặc tả Use case và Activity Diagram
+a)	Đăng nhập:
+-	Đối tượng sử dụng: Người dùng.
+-	Mô tả: Đăng nhập vào phần mềm để cá nhân hoá phần mềm.
+-	Luồng sự kiện: 
+
+
+-	Tiền điều kiện: Không.
+-	Hậu điều kiện: Không.
+-	Mối quan hệ: Người dùng và phần mềm.
+b)	Phát nhạc:
+-	Đối tượng sử dụng: Người dùng.
+-	Mô tả: Phát bài hát. Bài hát này được lưu trữ ở server và phần mềm cho phép người dùng chọn từ nhiều nguồn: playlist của người dùng, playlist đề xuất,..
+-	Luồng sự kiện: 
+
+
+-	Tiền điều kiện: Nếu chọn bài hát từ playlist thì người dùng đã phải đăng nhập.
+-	Hậu điều kiện: Không.
+-	Mối quan hệ: Người dùng và phần mềm.
+c)	Tạo playlist mới:
+-	Đối tượng sử dụng: Người dùng.
+-	Mô tả: Tạo ra một tập hợp các bài hát theo ý người dùng.
+-	Luồng sự kiện: 
+
+
+-	Tiền điều kiện: người dùng đã phải đăng nhập.
+-	Hậu điều kiện: một playlist mới được thêm vào thư viện của người dùng.
+-	Mối quan hệ: Người dùng và phần mềm.
+d)	Xóa playlist:
+-	Đối tượng sử dụng: Người dùng.
+-	Mô tả: Xóa một playlist trong thư viện của người dùng.
+-	Luồng sự kiện: 
+
+
+-	Tiền điều kiện: người dùng đã phải đăng nhập.
+-	Hậu điều kiện: playlist người dùng muốn xóa bị xóa khỏi thư viện của người dùng.
+-	Mối quan hệ: Người dùng và phần mềm.
+e)	Đăng ký tài khoản:
+-	Đối tượng sử dụng: Người dùng.
+-	Mô tả: Đăng ký tài khoản mới.
+-	Luồng sự kiện: 
+
+
+-	Tiền điều kiện: không.
+-	Hậu điều kiện: không.
+-	Mối quan hệ: Người dùng và phần mềm.
+f)	Tìm kiếm bài hát:
+-	Đối tượng sử dụng: Người dùng.
+-	Mô tả: Tìm kiếm một bài hát theo tên của bài hát đó.
+-	Luồng sự kiện: 
+
+
+-	Tiền điều kiện: không.
+-	Hậu điều kiện: không.
+-	Mối quan hệ: Người dùng và phần mềm.
+g)	Tìm lại mật khẩu:
+-	Đối tượng sử dụng: Người dùng.
+-	Mô tả: Tìm lại mật khẩu cho người dùng trong trường hợp người dùng quên mật khẩu.
+-	Luồng sự kiện: 
+
+
+-	Tiền điều kiện: không.
+-	Hậu điều kiện: không.
+-	Mối quan hệ: Người dùng và phần mềm.
+5.	Sequence Diagram (Sơ đồ trình tự)
+a)	Đăng nhập
+
+
+b)	Phát nhạc
+
+
+
+c)	Tạo playlist mới
+
+
+d)	Xóa playlist
+
+
+e)	Đăng ký tài khoản
+
+
+f)	Tìm kiếm bài hát
+
+
+g)	Tìm lại mật khẩu
+
+
+6.	Class Diagram
+
+
+
+ 
+II.	THIẾT KẾ GIAO DIỆN
+1.	Danh sách các trang chính của chương trình
+STT	Tên giao diện
+1	Màn hình chưa đăng nhập
+2	Đăng ký tài khoản
+3	Đăng nhập
+4	Quên mật khẩu
+5	Trang chủ
+6	Trình chơi nhạc
+7	Tìm bài hát
+8	Thư viện
+9	Tạo playlist người dùng
+10	Các bài hát yêu thích
+2.	Giao diện các trang
+a)	Màn hình chưa đăng nhập
+ 
+Thành phần giao diện
+STT	Ý nghĩa
+1	Tạo tài khoản vào ứng dụng miễn phí.
+2	Sử dụng ứng dụng mà không cần tạo tài khoản.
+3	Đăng nhập vào tài khoản có sẵn.
+ 
+b)	Tạo tài khoản
+ 
+Thành phần giao diện
+STT	Ý nghĩa
+1	Nhập username.
+2	Nhập mật khẩu.
+3	Lựa chọn câu hỏi bảo mật.
+4	Trả lời câu hỏi bảo mật.
+5	Button tạo tài khoản
+
+c)	Đăng nhập
+ 
+Thành phần giao diện
+STT	Ý nghĩa
+1	Nhập username.
+2	Nhập mật khẩu.
+3	Chuyển tới màn hình tìm lại tài khoản.
+4	Đăng nhập.
+
+d)	Quên mật khẩu
+ 
+Thành phần giao diện
+STT	Ý nghĩa
+1	Nhập username của tải khoản cần tìm.
+2	Chọn câu hỏi bảo mật lúc tạo tài khoản.
+3	Trả lời câu hỏi bảo mật.
+4	Tìm mật khẩu.
+
+e)	Trang chủ
+ 
+Thành phần giao diện
+STT	Ý nghĩa
+1	Playlist nhạc theo chủ đề mà ứng dụng recommend.
+2	MiniPlayer để điều khiển nhạc đang được phát.
+3	Icon Tab Home.
+4	Icon Tab Player.
+5	Icon Tab Search.
+6	Icon Tab Library.
+
+f)	Giao diện chơi nhạc
+ 
+Thành phần giao diện
+STT	Ý nghĩa
+1	Button hiện playlist đang được phát.
+2	Button thêm bài hát vào playlist của user.
+3	Button thêm bài hát vào List nhạc yêu thích
+4	Button Set để điều khiển trình nghe nhạc.
+
+g)	Tìm kiếm bài hát
+ 
+Thành phần giao diện
+STT	Ý nghĩa
+1	Input Box để nhập bài phát cần tìm.
+
+h)	Thư viện
+ 
+Thành phần giao diện
+STT	Ý nghĩa
+1	Button vào trang các playlists của user
+2	Button vào trang các bài hát của user
+3	Button Log out tài khoản.
+4	Hiện các bài đang đã được nghe gần đây.
+
+i)	Tạo playlist mới của user
+ 
+Thành phần giao diện
+STT	Ý nghĩa
+1	Input nhập tên playlist.
+2	Button bỏ không tạo nữa.
+3	Button xác nhận tạo playlist mới.
+
+j)	Các bài hát yêu thích
+ 
+Thành phần giao diện
+STT	Ý nghĩa
+1	Nghe tất cả bài hát yêu thích.
+
+ 
+C.	TỔNG KẾT
+I.	PHÂN CHIA CÔNG VIỆC
+	Phan Thanh Tùng	Phạm Quang Vinh
+Thiết kế Diagrams
+Use Case		
+Đặc tả Use Case		
+Activity Diagram		
+Sequence Diagram		
+Class Diagram		
+Coding
+Thiết kế cơ sở dữ liệu		
+Cài đặt cơ sở dữ liệu		
+Coding		
+
+II.	MÔI TRƯỜNG PHÁT TRIỂN 
+-	Hệ điều hành: Android, iOS.
+-	Công cụ xây dựng ứng dụng: Visual Code, Android Studio, Xcode
+-	Ngôn ngữ lập trình: JavaScript.
+-	Công nghệ sử dụng: React native.
+III.	KẾT QUẢ ĐẠT ĐƯỢC
+1.	Kết quả
+Trong phạm vi thời gian và kiến thức giới hạn của nhóm, sau một tháng triển khai thực hiện đồ án, nhóm đã hoàn thành được phần mềm nghe nhạc tương đối hoàn chỉnh, độ ổn định và chính xác cao, thực hiện cài đặt và bàn giao cho khách hàng trong thời gian quy định.
+2.	Hạn chế
+Vì thời gian nghiên cứu và hiện thực đề tài còn giới hạn vì thế kết quả của đề tài còn có một số hạn chế. Cụ thể như sau:
+-	Giao diện chỉ ở mức khá.
+-	Chưa thực sự phục vụ tốt cho các mục đích mở rộng và nâng cấp phần mềm sau này.
+-	Chưa tiến hành kiểm thử phần mềm trên nhiều thiết bị.
+-	Có thể vẫn tồn tại tồn tại khác lỗi tìm ẩn.
+3.	Hướng phát triển
+-	Cải tiến giao diện đẹp mắt và thân thiện với người dùng hơn.
+-	Tích hợp vào hệ thống đề xuất bài hát dựa trên những bài hát đã nghe gần đây của người dùng để trải nghiệm người dùng được tốt hơn.
+-	Cải tiến cơ sở dữ liệu, thống kê và đề xuất cho người dùng những bài hát đang thịnh hành,…
+-	Hỗ trợ người dùng nhiều tiện ích hơn: tự động tắt nhạc, mở bài hát theo giọng nói, ….
+-	Nhận feedbacks từ người dùng để sửa lỗi và cải tiến phần mềm ngày càng tốt hơn.
