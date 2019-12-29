@@ -34,12 +34,12 @@ $ react-native run-ios
 ## Các tính năng chính
 
 Dưới đây là 1 số tính năng chính của chương trình
-1. [Đăng nhập](#đăng-nhập)
-2. [Đăng ký](#đăng-ký)
-3. [Đặt lại mật khẩu](#đặt-lại-mật-khẩu)
-4. [Phát nhạc](#phát-nhạc)
-5. [Quản lý playlist](#playlist)
-6. [Tìm kiếm bài hát](#tìm-kiểm)
+1. Đăng nhập
+2. Đăng ký]
+3. Đặt lại mật khẩu]
+4. Phát nhạc
+5. Quản lý playlist
+6. Tìm kiếm bài hát
 
 ### Screenshots
 - [Đăng nhập]
